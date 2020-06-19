@@ -10,4 +10,9 @@
 
  ## Installation
 
+  - Build from source
  
+```
+git clone https://github.com/cannibalcheeseburger/covid-19-tracker.git
+cd covid-19-tracker
+```
