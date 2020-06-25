@@ -6,6 +6,7 @@ from dash.dependencies import Input, Output
 import pandas as pd
 import src
 
+
 baseURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/"
 def loadData(fileName, columnName):
     data = pd.read_csv(baseURL + fileName) \
@@ -154,7 +155,8 @@ def nonreactive_data(country, state):
     data = data.join(newCases)
     data['dateStr'] = data['date'].dt.strftime('%b %d, %Y')
     return data
-    
+
+server = app.server
 
 if __name__ =="__main__":
     app.run_server(debug = True)
