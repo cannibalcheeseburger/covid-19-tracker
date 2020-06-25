@@ -6,9 +6,23 @@ from dash.dependencies import Input, Output
 import pandas as pd
 import src
 
-allData =  src.loadData("time_series_covid19_confirmed_global.csv", "CumConfirmed") \
-  .merge(src.loadData("time_series_covid19_deaths_global.csv", "CumDeaths")) \
-  .merge(src.loadData("time_series_covid19_recovered_global.csv", "CumRecovered"))
+baseURL = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/"
+def loadData(fileName, columnName):
+    data = pd.read_csv(baseURL + fileName) \
+             .drop(['Lat', 'Long'], axis=1) \
+             .melt(id_vars=['Province/State', 'Country/Region'], 
+                 var_name='date', value_name=columnName) \
+             .astype({'date':'datetime64[ns]', columnName:'Int64'}, 
+                 errors='ignore')
+    data['Province/State'].fillna('<all>', inplace=True)
+    data[columnName].fillna(0, inplace=True)
+    return data
+
+
+
+allData =  loadData("time_series_covid19_confirmed_global.csv", "CumConfirmed") \
+  .merge(loadData("time_series_covid19_deaths_global.csv", "CumDeaths")) \
+  .merge(loadData("time_series_covid19_recovered_global.csv", "CumRecovered"))
 
 countries = allData['Country/Region'].unique()
 countries.sort()
@@ -18,13 +32,14 @@ tickFont = {'size':12, 'color':"rgb(30,30,30)", \
             'family':"Courier New, monospace"}
 
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__,external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(
     style={ 'font-family':"Courier New, monospace" }, children=[
+        
         html.H1('Case History of the Coronavirus (COVID-19)'),
         html.Div(className="row", children=[
-            html.Div(className="four columns", children=
+            html.Div(className="four columns", children=[
                 html.H5('Country'),
                 dcc.Dropdown( 
                     id='country',
@@ -32,7 +47,9 @@ app.layout = html.Div(
                         for c in countries],
                     value='Italy'
                 )
+
             ]),
+
             html.Div(className="four columns", children=[
                 html.H5('State / Province'),
                 dcc.Dropdown(
@@ -49,10 +66,17 @@ app.layout = html.Div(
                 )
             ])
         ]),
+        dcc.Graph(
+            id="plot_new_metrics",
+            config={ 'displayModeBar': False }
+                     ),
+        dcc.Graph(
+            id="plot_cum_metrics", 
+            config={ 'displayModeBar': False }
+         )
+        
     ]
-  
-])
-
+)
 
 
 @app.callback(
@@ -101,6 +125,7 @@ def barchart(data, metrics, prefix="", yaxisTitle=""):
             marker_color=colors[metric]
         ) for metric in metrics
     ])
+
     figure.update_layout( 
               barmode='group', legend=dict(x=.05, y=0.95), 
               plot_bgcolor='#FFFFFF', font=tickFont) \
@@ -128,7 +153,7 @@ def nonreactive_data(country, state):
                         for column in newCases.columns]
     data = data.join(newCases)
     data['dateStr'] = data['date'].dt.strftime('%b %d, %Y')
-    return 
+    return data
     
 
 if __name__ =="__main__":
