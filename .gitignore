@@ -131,3 +131,7 @@ dmypy.json
 env
 .vscode
 try.*
+dipeshsave.bat
+dipeshset.bat
+ranasave.bat
+ranaset.bat
