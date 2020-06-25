@@ -19,10 +19,9 @@ tickFont = {'size':12, 'color':"rgb(30,30,30)", \
 
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+
 app.layout = html.Div(
-    style={ 'font-family':"Courier New, monospace" }, 
-    children=[
-        ## 
+    style={ 'font-family':"Courier New, monospace" }, children=[
         html.H1('Case History of the Coronavirus (COVID-19)'),
         html.Div(className="row", children=[
             html.Div(className="four columns", children=
@@ -31,7 +30,7 @@ app.layout = html.Div(
                     id='country',
                     options=[{'label':c, 'value':c} \
                         for c in countries],
-                    value='India'
+                    value='Italy'
                 )
             ]),
             html.Div(className="four columns", children=[
@@ -51,7 +50,8 @@ app.layout = html.Div(
             ])
         ]),
     ]
-)
+  
+])
 
 
 
@@ -89,9 +89,10 @@ def update_states(country):
     state_value = state_options[0]['value']
     return state_options, state_value
 
-colors = { 'Deaths':'rgb(200,30,30)', \
-           'Recovered':'rgb(30,200,30)', \ 
-           'Confirmed':'rgb(100,140,240)' }
+colors = { 'Deaths':'rgb(200,30,30)',  'Recovered':'rgb(30,200,30)', 'Confirmed':'rgb(100,140,240)'}
+
+
+
 def barchart(data, metrics, prefix="", yaxisTitle=""):
     figure = go.Figure(data=[
         go.Bar(
@@ -129,3 +130,6 @@ def nonreactive_data(country, state):
     data['dateStr'] = data['date'].dt.strftime('%b %d, %Y')
     return 
     
+
+if __name__ =="__main__":
+    app.run_server(debug = True)
