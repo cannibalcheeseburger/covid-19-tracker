@@ -7,3 +7,4 @@ def case_time_series():
     df['Date'] = pd.to_datetime(df['Date'],format="%d %B %Y")
     df['Date'] = df['Date'].astype('datetime64[ns]')
     return df
+
