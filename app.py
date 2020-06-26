@@ -21,6 +21,10 @@ tickFont = {'size':12, 'color':"rgb(30,30,30)", \
 
 app = dash.Dash(__name__,external_stylesheets=external_stylesheets)
 
+app.title =  'Covid-19 Tracker'
+
+app._favicon = 'img/favicon.png'
+
 app.layout = html.Div( children  = [
     html.H1(children = "Hello dash", id = 'h1id'),
 
@@ -67,6 +71,9 @@ def update_graph(drop_value):
         daily_fig = px.line(state_daily[state_daily['Status']=='Confirmed'],x = 'Date',y = drop_value,title='Daily Time Series')
         daily_fig.add_scatter(x = state_daily[state_daily['Status']=='Recovered']['Date'],y = state_daily[state_daily['Status']=='Recovered'][drop_value],name='Recovered')
         daily_fig.add_scatter(x =state_daily[state_daily['Status']=='Deceased']['Date'],y = state_daily[state_daily['Status']=='Deceased'][drop_value],name='Deceased')
+
+    figure.update_layout(transition_duration=500)
+    daily_fig.update_layout(transition_duration=500)
 
     return figure,daily_fig
 
