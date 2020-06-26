@@ -1,4 +1,8 @@
-# Notes dekh lena 1st step krke Dono  
+# Notes dekh lena 1st step 
+
+To check project boards : [Project board](https://github.com/cannibalcheeseburger/covid-19-tracker/projects/1)
+
+Might Help : https://community.plotly.com/t/how-do-i-create-country-specific-chlropleth-maps/4814/2
 
 ## For Dipesh
 
