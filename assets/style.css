@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
 body {
     font-family: "Open Sans", sans-serif;
-    font-weight: 300;
     color: #a3a7b0;
     background-color: #23272c;
     margin: 0;
@@ -13,11 +12,6 @@ hr {
     background-color: rgba(255, 255, 255, 0.20);
     border: 0;
     margin: 0 0 6% 0;
-}
-
-h3 {
-    font-family: "Open Sans", sans-serif;
-    font-weight: 400;
 }
 
 #header {
