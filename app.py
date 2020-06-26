@@ -70,7 +70,7 @@ def update_graph(drop_value):
 
     return figure,daily_fig
 
-
+server = app.server
 
 if __name__ == "__main__":
     app.run_server(debug = True)
