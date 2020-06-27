@@ -7,6 +7,7 @@ import pandas as pd
 import src
 import plotly.express as px
 import json
+import dash_table
 
 time_series  = src.case_time_series()
 state_total,last_update = src.states_wise()
@@ -28,7 +29,23 @@ app._favicon = 'img/favicon.png'
 app.layout = html.Div( children  = [
     html.H1(children = "Covid-19 Tracker", id = 'h1id'),
 
-    html.H6(children = "LAST UPDATED: "+str(last_update)),
+    html.P(id = 'last',children = "LAST UPDATED: "+str(last_update)),
+    html.Div([
+                dash_table.DataTable(
+                    id='table',
+                    columns=[{"name":i,"id":i} for i in state_total.columns[:5]],
+                    data=state_total.to_dict('records'),
+                    style_cell={'textAlign':'left'},
+                    style_table={'height':'40%','width':'95%','margin-left':'40px','margin-up':'10px'},
+                    style_data_conditional=[{
+                            'if':{'row_index':'odd'},
+                            'backgroundColor':'rgb(248, 248, 248)'
+                    }],
+                    style_header={
+                            'backgroundColor': 'rgb(230, 230, 230)',
+                            'fontWeight': 'bold'
+                    }
+                )]),
     html.Div(id = 'state-graph',children = [
         dcc.Dropdown(
             id = 'dropdown',

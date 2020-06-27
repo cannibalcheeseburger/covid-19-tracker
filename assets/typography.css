@@ -73,3 +73,8 @@ p {
     margin-bottom: 2rem !important;
     font-size: 2rem;
 }
+
+#last {
+    font-size: 0.1em;
+    text-align: center;
+}
