@@ -4,6 +4,8 @@ To check project boards : [Project board](https://github.com/cannibalcheeseburge
 
 Might Help : https://community.plotly.com/t/how-do-i-create-country-specific-chlropleth-maps/4814/2
 
+add http exception
+
 ## For Dipesh
 
 1. Har baar kaam start krne se pehle [dipeshset.bat] file pe double click krna . fir kaam start krna

@@ -4,12 +4,8 @@
     box-align: left;
     position: sticky;
 }
+*/
 
 #state-scatter {
-    width: 50%;
-    box-align: right;
-    position: relative;
+    padding: 30;
 }
-
-
-/*

@@ -14,7 +14,7 @@ state_total,last_update = src.states_wise()
 state_daily = src.daily_state()
 state_cumu  = src.state_cumu()
 
-external_stylesheets = ['https://raw.githubusercontent.com/plotly/dash-sample-apps/master/apps/dash-datashader/assets/style.css']
+external_stylesheets = []
 tickFont = {'size':12, 'color':"rgb(30,30,30)", \
             'family':"Courier New, monospace"}
 
@@ -64,10 +64,22 @@ app.layout = html.Div( children  = [
         )
     ]),
     html.Div(id = 'state-scatter',children =[
+        dcc.Slider(
+            id = 'mortality-slider',
+            min = state_cumu['Date'].dt.month.unique().min(),
+            max = state_cumu['Date'].dt.month.unique().max(),
+            step = 1,
+            #markers  = {i: str(i) for i in state_cumu['Date'].dt.month_name().unique()}
+
+            #marks  ={str(j):{ 'Label': str(i)} for i,j in zip(state_cumu['Date'].dt.month_name().unique(),state_cumu['Date'].dt.month.unique())}
+        ),
+
+
         dcc.Graph(
             className = 'graph',
             figure = px.scatter(state_total[1:],x = 'Deaths', y ='Confirmed',size_max=150,title='yyas',size='Deaths',color='State',log_x=True),        
-            )
+            ),
+        
     ]),
 ])
 
@@ -81,21 +93,20 @@ app.layout = html.Div( children  = [
 def update_graph(drop_value):
     
     if drop_value == 'TT':
-        figure = px.line(time_series,x = 'Date', y ='Total Confirmed',title='Time Series Total')
-        figure.add_scatter( x = time_series['Date'],y=time_series['Total Deceased'],name='Deceased')
-        figure.add_scatter( x = time_series['Date'],y=time_series['Total Recovered'],name='Recovered')
-        daily_fig = px.line(time_series,x = 'Date', y ='Daily Confirmed',title='Daily Time Series')   
-        daily_fig.add_scatter( x = time_series['Date'],y=time_series['Daily Deceased'],name='Deceased')
-        daily_fig.add_scatter( x = time_series['Date'],y=time_series['Daily Recovered'],name='Recovered')
+        figure = px.area(time_series,x = 'Date', y ='Total Confirmed',title='Time Series Total')
+        figure.add_scatter( x = time_series['Date'],y=time_series['Total Deceased'],name='Deceased',fill='tozeroy')
+        figure.add_scatter( x = time_series['Date'],y=time_series['Total Recovered'],name='Recovered',fill='tonexty')
+        daily_fig = px.area(time_series,x = 'Date', y ='Daily Confirmed',title='Daily Time Series')   
+        daily_fig.add_scatter( x = time_series['Date'],y=time_series['Daily Deceased'],name='Deceased',fill='tozeroy')
+        daily_fig.add_scatter( x = time_series['Date'],y=time_series['Daily Recovered'],name='Recovered',fill='tonexty')
 
     else :
-        state_cum = state_cumu[drop_value]
-        figure = px.line(state_daily[state_daily['Status']=='Confirmed'],x = 'Date',y = state_cum[::3],title='Daily Time Series')
-        figure.add_scatter(x = state_daily[state_daily['Status']=='Recovered']['Date'],y = state_cum[1::3],name='Recovered')
-        figure.add_scatter(x =state_daily[state_daily['Status']=='Deceased']['Date'],y = state_cum[2::3],name='Deceased')
-        daily_fig = px.line(state_daily[state_daily['Status']=='Confirmed'],x = 'Date',y = drop_value,title='Daily Time Series')
-        daily_fig.add_scatter(x = state_daily[state_daily['Status']=='Recovered']['Date'],y = state_daily[state_daily['Status']=='Recovered'][drop_value],name='Recovered')
-        daily_fig.add_scatter(x =state_daily[state_daily['Status']=='Deceased']['Date'],y = state_daily[state_daily['Status']=='Deceased'][drop_value],name='Deceased')
+        figure = px.area(state_cumu[[state_cumu['Status']=='Confirmed']],x = 'Date',y = drop_value,title='Daily Time Series')
+        figure.add_scatter(x =state_cumu[[state_cumu['Status']=='Confirmed']]['Date'],y = state_cumu[drop_value],name='Deceased',fill='tozeroy')
+        figure.add_scatter(x = state_cumu[[state_cumu['Status']=='Confirmed']]['Date'],y = state_cumu[drop_value],name='Recovered',fill='tonexty')
+        daily_fig = px.area(state_daily[state_daily['Status']=='Confirmed'],x = 'Date',y = drop_value,title='Daily Time Series')
+        daily_fig.add_scatter(x =state_daily[state_daily['Status']=='Deceased']['Date'],y = state_daily[state_daily['Status']=='Deceased'][drop_value],name='Deceased',fill='tozeroy')
+        daily_fig.add_scatter(x = state_daily[state_daily['Status']=='Recovered']['Date'],y = state_daily[state_daily['Status']=='Recovered'][drop_value],name='Recovered',fill='tonexty')
 
     figure.update_layout(transition_duration=500)
     daily_fig.update_layout(transition_duration=500)
