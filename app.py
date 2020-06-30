@@ -30,6 +30,7 @@ app.layout = html.Div( children  = [
     html.H1(children = "Covid-19Tracker", id = 'h1id'),
 
     html.P(id = 'last',children = "LAST UPDATED: "+str(last_update)),
+
     html.Div(id = 'Status',children = [
         html.Div(id = 'StatusConfirmed',children =[
             html.H5('Confirmed'),

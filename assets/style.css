@@ -3,6 +3,8 @@ body {
     background-color: #161625;
     color: #6c757d;
     font-family: 'B612', sans-serif;
+    margin: 0px;
+    padding: 0px;
 }
 
 h1 {
@@ -59,16 +61,29 @@ h6 {
     max-width: 500px;
 }
 
-#state-graph {
-    float: left;
-}
-
 td {
     white-space: pre
 }
 
+#tables {
+    display: block;
+}
+
 
 /*
-color: #1e1e30; LIGHTER
 
-*/
+#main {
+    float: left;
+}
+
+#state-graph {
+    float: left;
+}
+
+#state-scatter {
+    display: block;
+    float: left;
+}
+
+color: #1e1e30;
+LIGHTER */
