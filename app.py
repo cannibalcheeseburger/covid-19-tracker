@@ -27,25 +27,57 @@ app.title =  'Covid-19 Tracker'
 app._favicon = 'img/favicon.png'
 
 app.layout = html.Div( children  = [
-    html.H1(children = "Covid-19 Tracker", id = 'h1id'),
+    html.H1(children = "Covid-19Tracker", id = 'h1id'),
 
     html.P(id = 'last',children = "LAST UPDATED: "+str(last_update)),
-    html.Div([
-                dash_table.DataTable(
-                    id='table',
-                    columns=[{"name":i,"id":i} for i in state_total.columns[:5]],
-                    data=state_total.to_dict('records'),
-                    style_cell={'textAlign':'left'},
-                    style_table={'height':'40%','width':'95%','margin-left':'40px','margin-up':'10px'},
-                    style_data_conditional=[{
-                            'if':{'row_index':'odd'},
-                            'backgroundColor':'rgb(248, 248, 248)'
-                    }],
-                    style_header={
-                            'backgroundColor': 'rgb(230, 230, 230)',
-                            'fontWeight': 'bold'
-                    }
-                )]),
+
+    html.Div(id = 'Status',children = [
+        html.Div(id = 'StatusConfirmed',children =[
+            html.H5('Confirmed'),
+            html.H6('+ '+str(time_series['Daily Confirmed'].iloc[-1])),
+            html.H4(time_series['Total Confirmed'].iloc[-1])
+        ]),
+        html.Div(id = 'StatusRecovered',children =[
+            html.H5('Recovered'),
+            html.H6('+ '+str(time_series['Daily Recovered'].iloc[-1])),
+            html.H4(time_series['Total Recovered'].iloc[-1])
+        ]),
+        html.Div(id = 'StatusDeceased',children =[
+            html.H5('Deceased'),
+            html.H6('+ '+str(time_series['Daily Deceased'].iloc[-1])),
+            html.H4(time_series['Total Deceased'].iloc[-1])
+        ]),
+    ]),
+    html.Div(id="main",children=[
+        dcc.Loading(color = '#161625', children = [
+            html.Div([
+                        dash_table.DataTable(
+                            id='tables',
+                            columns=[{"name":i,"id":i} for i in state_total.columns[:5]],
+                            data=state_total.to_dict('records'),
+                            style_header={'backgroundColor': '#1e1e30'},
+                            style_cell={
+                                'backgroundColor': '#1e1e30',
+                                'border': '5px solid #161625',
+                            },
+                            style_data_conditional=[
+                            {
+                                # stripped rows
+                                'if': {'row_index': 'even'},
+                                'backgroundColor': '#161625'
+                            },
+                            {
+                            'if': {
+                                'column_id': 'State',
+                            },
+                            'backgroundColor': '#1e1e30',
+                            },
+                            ],
+                        )
+                    ]),
+        ]),
+
+    ]),
     html.Div(id = 'state-graph',children = [
         dcc.Dropdown(
             id = 'dropdown',
@@ -63,6 +95,7 @@ app.layout = html.Div( children  = [
             className = 'graph',
         )
     ]),
+ 
     html.Div(id = 'state-scatter',children =[
         dcc.Slider(
             id = 'mortality-slider',
@@ -101,9 +134,9 @@ def update_graph(drop_value):
         daily_fig.add_scatter( x = time_series['Date'],y=time_series['Daily Recovered'],name='Recovered',fill='tonexty')
 
     else :
-        figure = px.area(state_cumu[[state_cumu['Status']=='Confirmed']],x = 'Date',y = drop_value,title='Daily Time Series')
-        figure.add_scatter(x =state_cumu[[state_cumu['Status']=='Confirmed']]['Date'],y = state_cumu[drop_value],name='Deceased',fill='tozeroy')
-        figure.add_scatter(x = state_cumu[[state_cumu['Status']=='Confirmed']]['Date'],y = state_cumu[drop_value],name='Recovered',fill='tonexty')
+        figure = px.area(state_cumu[state_cumu['Status']=='Confirmed'],x = 'Date',y = drop_value,title='Daily Time Series')
+        figure.add_scatter(x = state_cumu[state_cumu['Status']=='Deceased']['Date'],y = state_cumu[state_cumu['Status']=='Recovered'][drop_value],name='Recovered',fill='tonexty')
+        figure.add_scatter(x =state_cumu[state_cumu['Status']=='Recovered']['Date'],y = state_cumu[state_cumu['Status']=='Deceased'][drop_value],name='Deceased',fill='tozeroy')
         daily_fig = px.area(state_daily[state_daily['Status']=='Confirmed'],x = 'Date',y = drop_value,title='Daily Time Series')
         daily_fig.add_scatter(x =state_daily[state_daily['Status']=='Deceased']['Date'],y = state_daily[state_daily['Status']=='Deceased'][drop_value],name='Deceased',fill='tozeroy')
         daily_fig.add_scatter(x = state_daily[state_daily['Status']=='Recovered']['Date'],y = state_daily[state_daily['Status']=='Recovered'][drop_value],name='Recovered',fill='tonexty')

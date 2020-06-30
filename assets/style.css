@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=B612&display=swap');
+body {
+    background-color: #161625;
+    color: #6c757d;
+    font-family: 'B612', sans-serif;
+    margin: 0px;
+    padding: 0px;
+}
+
+h1 {
+    text-align: center;
+    color: #1877e0;
+    font-weight: bold;
+    font-size: 48px;
+}
+
+h4 {
+    font-size: 28px;
+}
+
+h5 {
+    font-size: 20px;
+}
+
+h6 {
+    font-size: 16px;
+}
+
+#last {
+    font-size: 12px;
+    text-align: center;
+}
+
+#Status {
+    text-align: center;
+    background-color: white;
+}
+
+#StatusConfirmed {
+    float: left;
+    margin-left: 40px;
+    margin: 0px 30px;
+    color: #ff073a;
+}
+
+#StatusRecovered {
+    float: left;
+    margin: 0px 30px;
+    color: #28a745;
+}
+
+#StatusDeceased {
+    float: left;
+    margin: 0px 30px;
+    color: #6c757d;
+}
+
+.dash-spreadsheet-container {
+    border-radius: 15px;
+    overflow: hidden;
+    max-width: 500px;
+}
+
+td {
+    white-space: pre
+}
+
+#tables {
+    display: block;
+}
+
+.dash-spinner {
+    color: #161625;
+}
+
+
+/*
+
+#main {
+    float: left;
+}
+
+#state-graph {
+    float: left;
+}
+
+#state-scatter {
+    display: block;
+    float: left;
+}
+
+color: #1e1e30;
+LIGHTER */
