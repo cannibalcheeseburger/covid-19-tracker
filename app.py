@@ -23,7 +23,7 @@ tickFont = {'size':12, 'color':"rgb(30,30,30)", \
             'family':"Courier New, monospace"}
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, meta_tags=[
-    {"name": "viewport", "content": "width=device-width, initial-scale=1"}])
+    {"name": "viewport", "content": "width=device-width, initial-scale=1.0"}])
 
 app.title =  'Covid-19 Tracker'
 
@@ -46,34 +46,41 @@ state_scatter.update_layout(plot_bgcolor='#003f5c',
 
 
 app.layout = html.Div( children  = [
-    html.H1(children = "Covid-19 Tracker", id = 'h1id',),
+    html.H1(children = "Covid-19 Tracker", id = 'h1id',className='heading'),
 
-    html.P(id = 'last_update',children = "LAST UPDATED: "+str(last_update)),
+    html.P(id = 'last_update',children = "LAST UPDATED: "+str(last_update), className='last_update'),
     
-    html.Div(children = [
+    html.Div([
         dcc.Dropdown(
             id = 'dropdown',
+            className='custom_dropdown',
             options=[{'label': i, 'value': j} for i,j in state_codes_zip],
             value='TT'
         ),
 
     ]),      
       
+    html.Div([
+        dcc.Tabs(parent_className='custom_tabs',
+                 className='custom_tabs_container', children=[
+            dcc.Tab(label='Total Cases', className='custom_tab',selected_className='selected_custom_tab',children=[
+                dcc.Graph(
+                    id='time_series_total',
+                    className='graph',
+                    config={'displayModeBar': False}
+                ),
 
-    html.Div(children=[
+            ]),
+            dcc.Tab(label='Daily Cases', className='custom_tab', selected_className='selected_custom_tab', children=[
+                dcc.Graph(
+                    id='time_series_daily',
+                    className='graph',
+                    config={'displayModeBar': False}
+                )
 
-        dcc.Graph(
-            id='time_series_total',
-            className='graph',
-            config={'displayModeBar': False}
-        ),
-
-        dcc.Graph(
-            id='time_series_daily',
-            className='graph',
-            config={'displayModeBar': False}
-        )
-        
+            ])
+            
+        ])
     ]),
 
     html.Div(children=[
@@ -147,7 +154,6 @@ def update_graph(drop_value):
                                    showlegend=False,
                                    )
         
-
     figure_daily.update_layout(plot_bgcolor='#f5f5f5',
                                    xaxis=dict(showline=False, showgrid=False),
                                    yaxis=dict(showline=False, showgrid=False),
