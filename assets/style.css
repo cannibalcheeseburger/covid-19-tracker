@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=B612&display=swap');
+body {
+    background-color: #ffffff;
+    color: #6c757d;
+    font-family: 'B612', sans-serif;
+    margin: 0px;
+    padding: 0px;
+}
+
+h1 {
+    text-align: center;
+    color: #1877e0;
+    font-weight: bold;
+    font-size: 48px;
+}
+
+h4 {
+    font-size: 18px;
+    padding: 0%;
+     
+    line-height: 0px; 
+}
+
+h5 {
+    font-size: 12px;
+    padding: 0px;
+    
+    line-height: 0px;
+}
+
+h6 {
+    font-size: 10px;
+    padding: 0px;
+    line-height: 0px;
+}
+
+#last {
+    font-size: 12px;
+    text-align: center;
+}
+
+
+
+#left_fix_container {                                          
+    text-align: left;
+    background-color: white;
+    width: 40%;
+    margin-right:-20px;
+}
+
+@media screen and (max-width: 650px){
+    #left_fix_container{
+        width: 100%;
+
+    }
+    
+}
+
+#StatusConfirmed {
+    float:left;
+    margin: 0px 5% 0px 10%;
+    color: #ff073a;
+
+}
+
+#StatusRecovered {
+    float: left;
+    margin: 0px 5%;
+    color: #28a745;
+}
+
+#StatusDeceased {
+    float: left;
+    margin: 0px 5%;
+    color: #6c757d;
+}
+
+#StatusActive{
+    float: left;
+    margin: 0px 5%;
+    color: #00c3ff;
+}
+
+.dash-spreadsheet-container {
+    float: left;
+    
+    margin: 20px;
+    margin-right:-50px;
+    width:inherit;
+}
+
+
+.dash-spinner {
+    color: #161625;
+}
+
+#right_container{
+   width: 50%;
+    float: right;
+    margin:0px 30px 0px 0px;
+
+}
+
+#dropdown_top {
+    height:36px;
+   
+}
+
+#graph_right_side{
+    float: right;
+}
+
+#scatter_graph_bottom{
+    float:left;
+    width:100%;
+}
+
+
