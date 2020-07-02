@@ -9,13 +9,19 @@ import plotly.express as px
 import json
 import dash_table
 import os
+import datetime
+import dateutil.relativedelta
+
+today = datetime.date.today()
+last_month = today + dateutil.relativedelta.relativedelta(months=-2)
 
 time_series  = src.case_time_series()
-state_total,last_update = src.states_wise()
+state_total,last_update= src.states_wise()
 state_daily = src.daily_state()
 state_cumu  = src.state_cumu()
 state_codes_zip = zip(state_total.State.unique(), state_total.State_code.unique())
 state_codes = dict(zip(state_total.State_code.unique(),state_total.State.unique()))
+
 
 
 external_stylesheets = []
@@ -77,8 +83,8 @@ app.layout = html.Div(children = [
             html.Div([
                         dash_table.DataTable(
                             id='left_table',
-                            columns=[{"name":i,"id":i} for i in state_total.columns[:5]],
-                            data=state_total.to_dict('records'),
+                            columns=[{"name":i,"id":i} for i in state_total.drop(0).columns[:5]],
+                            data=state_total.drop(0).to_dict('records'),
                             style_cell={'backgroundColor':'#fafafa'},
                             style_header={'backgroundColor': '#ffffff','textAlign':'center','fontWeight':'bold'},
                             style_data={'border':'2px white',},
@@ -94,8 +100,6 @@ app.layout = html.Div(children = [
                                 'fontWeight':'bold',
                                 
                                 'maxWidth':'100px',
-                                
-                                
                             },
                             ],
                             style_as_list_view = True,
@@ -104,9 +108,7 @@ app.layout = html.Div(children = [
         ]),
 
     ]),
-
-    ]),
-
+]),
 
     html.Div(id='right_container', children=[
         html.Div(id = 'dropdown_top',children = [
@@ -119,21 +121,30 @@ app.layout = html.Div(children = [
 
         ]),      
 
-        html.Div(className='graph_right_side', children=[
+        html.Div([
+            dcc.Tabs(id='tabs_top', value='total',children=[
+                dcc.Tab(label='Total', value='total'),
+                dcc.Tab(label='Daily', value='daily'),
+            ])
+        ]),
+
+        html.Div(id='graph_right_side', children=[
             dcc.Graph(
-                id='time_series_total',
+                id='figure_confirmed',
                 className='graph',
                 config={'displayModeBar': False}
-
             ),
-
             dcc.Graph(
-                id='time_series_daily',
+                id='figure_recovered',
+                className='graph',
+                config={'displayModeBar': False}
+            ),
+            dcc.Graph(
+                id='figure_deceased',
                 className='graph',
                 config={'displayModeBar': False}
             ),
         ]),
-
     ]),
 
     html.Div(id='scatter_graph_bottom',children=[
@@ -143,77 +154,252 @@ app.layout = html.Div(children = [
             figure=state_scatter,
             config={'displayModeBar': False}
         ),
-    ]),   
+    ]),
+
 ])   
-
-
+#Output('graph_right_side','children')],
 
 @app.callback(
-              [Output('time_series_total', 'figure'),
-               Output('time_series_daily', 'figure')],
-                [Input('dropdown', 'value')])
+              [Output('figure_confirmed', 'figure'),
+               Output('figure_recovered', 'figure'),
+               Output('figure_deceased', 'figure')],
+               
+                [Input('dropdown', 'value'),
+                Input('tabs_top','value')])
 
-def update_graph(drop_value):
+def update_graph(drop_value, value):
     
-    figure_total = go.Figure()
-    figure_daily = go.Figure()
-    if drop_value == 'TT':
+    
+    if drop_value == 'TT' and value=='total':
 
-        figure_total.add_trace(go.Scatter(x=time_series['Date'],y=time_series['Total Confirmed'],mode='lines',name='Total Confirmed',text="Confirmed"))
-        figure_total.add_trace(go.Scatter(x=time_series['Date'], y=time_series['Total Recovered'], mode='lines', name='Total Recovered',line_color='#00ff00'))
-        figure_total.add_trace(go.Scatter(x=time_series['Date'], y=time_series['Total Deceased'], mode='lines', name='Total Deceased',line_color='#ff0000'))
-        
-        figure_daily.add_trace(go.Scatter(
-               x = time_series['Date'], y = time_series['Daily Confirmed'], mode = 'lines', name = 'Daily Confirmed'))
-        figure_daily.add_trace(go.Scatter(
-               x = time_series['Date'], y = time_series['Daily Recovered'], mode = 'lines', name = 'Daily Recovered', line_color = '#00ff00'))
-        figure_daily.add_trace(go.Scatter(
-               x = time_series['Date'], y = time_series['Daily Deceased'], mode = 'lines', name = 'Daily Deceased', line_color = '#ff0000'))
-
-    else:
-
-        figure_total.add_trace(go.Scatter(
-            x=state_cumu[state_cumu['Status'] == 'Confirmed']['Date'], y=state_cumu[state_cumu['Status'] == 'Confirmed'][drop_value], mode='lines', name='Total Confirmed'))
-        figure_total.add_trace(go.Scatter(
-            x=state_cumu[state_cumu['Status'] == 'Deceased']['Date'], y=state_cumu[state_cumu['Status'] == 'Deceased'][drop_value], mode='lines', name='Total Recovered', line_color='#00ff00'))
-        figure_total.add_trace(go.Scatter(
-            x=state_cumu[state_cumu['Status'] == 'Recovered']['Date'], y=state_cumu[state_cumu['Status'] == 'Recovered'][drop_value], mode='lines', name='Total Deceased', line_color='#ff0000'))
+        figure_confirmed=go.Figure(go.Bar(x=time_series['Date'],y=time_series['Total Confirmed'],width=0.4))
+        figure_recovered=go.Figure(go.Bar(x=time_series['Date'],y=time_series['Total Recovered'],width=0.4))
+        figure_deceased=go.Figure(go.Bar(x=time_series['Date'],y=time_series['Total Deceased'],width=0.4))
 
 
-        figure_daily.add_trace(go.Scatter(
-            x=state_daily[state_daily['Status'] == 'Confirmed']['Date'], y=state_daily[state_daily['Status'] == 'Confirmed'][drop_value], mode='lines', name='Daily Confirmed'))
-        figure_daily.add_trace(go.Scatter(
-            x=state_daily[state_daily['Status'] == 'Recovered']['Date'], y=state_daily[state_daily['Status'] == 'Recovered'][drop_value], mode='lines', name='Daily Recovered', line_color='#00ff00'))
-        figure_daily.add_trace(go.Scatter(
-            x=state_daily[state_daily['Status'] == 'Deceased']['Date'], y=state_daily[state_daily['Status'] == 'Deceased'][drop_value], mode='lines', name='Daily Deceased', line_color='#ff0000'))
-
-    figure_total.update_layout(plot_bgcolor="#ffffff",
+        figure_confirmed.update_traces(marker_line_color='rgb(255,7,58)',marker_line_width=3,opacity=0.4)
+        figure_confirmed.update_xaxes(rangeslider_visible=False,rangeselector=dict(
+        buttons=list([
+            dict(label="All",step="all"),
+            dict(count=4, label="4M", step="month", stepmode="backward"),
+            dict(count=3, label="3M", step="month", stepmode="backward"),
+            dict(count=2, label="2M", step="month", stepmode="backward"),
+            dict(count=1, label="1M", step="month", stepmode="backward"),])))
+        figure_confirmed.update_layout(plot_bgcolor="#ffffff",
                                     transition_duration=500,
                                    xaxis=dict(showline=False, showgrid=False),
-                                   yaxis=dict(showline=False, showgrid=False),
-                                   #title={'text': 'Total Cases in %s' % (
-                                   #   state_codes['%s' % drop_value]), 'xanchor': 'center', 'x': 0.5,
-                                   #  'yanchor':'bottom', 'y':1, 'yref':'paper'},
-                                   xaxis_range=['2020-04-01',
+                                   yaxis=dict(showline=False, showgrid=False,side='right'),
+                                   xaxis_range=[last_month,
                                                 max(time_series['Date'])],
                                    showlegend=False,
                                    autosize=False,
-                                   width=650, height=280,
-                                   margin=dict(l=0,r=0,b=50,t=50),
-                                   )
-        
-    figure_daily.update_layout(plot_bgcolor='#ffffff',
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
+                                   font=dict(family="Sans Serif", size=9, color="#f50000"),
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%time_series['Total Confirmed'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+
+        figure_recovered.update_traces(marker_line_color='rgb(0,220,0)',marker_line_width=3, opacity=0.4)
+        figure_recovered.update_xaxes(rangeslider_visible=False,rangeselector=dict(
+        buttons=list([
+            dict(label="All",step="all"),
+            dict(count=4, label="4M", step="month", stepmode="backward"),
+            dict(count=3, label="3M", step="month", stepmode="backward"),
+            dict(count=2, label="2M", step="month", stepmode="backward"),
+            dict(count=1, label="1M", step="month", stepmode="backward"),])))    
+        figure_recovered.update_layout(plot_bgcolor='#ffffff',
                                     transition_duration=500,
                                    xaxis=dict(showline=False, showgrid=False),
-                                   yaxis=dict(showline=False, showgrid=False),
-                                   #title={'text': 'Daily Cases in %s' % (
-                                   #   state_codes['%s' % drop_value]), 'xanchor': 'center', 'x': 0.5,'yanchor':'bottom', 'y':1, 'yref':'paper'},
-                                   
-                                   xaxis_range=['2020-04-01',
+                                   yaxis=dict(showline=False, showgrid=False,side='right'),
+                                   xaxis_range=[last_month,
                                                 max(time_series['Date'])],
-                                   showlegend=False,autosize=False,width=650,height=280,margin=dict(l=0,r=0,b=50,t=50))
+                                   showlegend=False,autosize=False,width=500,height=240,
+                                  margin=dict(l=50,r=50,b=50,t=50,pad=5),
+                                   font=dict(family="Sans Serif", size=9, color="#00fd00"),
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%time_series['Total Recovered'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
 
-    return figure_total, figure_daily 
+        figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.4)                               
+        figure_deceased.update_xaxes(rangeslider_visible=False,rangeselector=dict(
+        buttons=list([
+            dict(label="All",step="all"),
+            dict(count=4, label="4M", step="month", stepmode="backward"),
+            dict(count=3, label="3M", step="month", stepmode="backward"),
+            dict(count=2, label="2M", step="month", stepmode="backward"),
+            dict(count=1, label="1M", step="month", stepmode="backward"),])))
+        figure_deceased.update_layout(plot_bgcolor="#ffffff",
+                                    transition_duration=500,
+                                   xaxis=dict(showline=False, showgrid=False),
+                                   yaxis=dict(showline=False, showgrid=False,side='right'),
+                                   xaxis_range=[last_month,
+                                                max(time_series['Date'])],
+                                   showlegend=False,
+                                   autosize=False,
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
+                                   font=dict(family="Sans Serif", size=9, color="#998d8d"),
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%time_series['Total Deceased'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+
+
+        return figure_confirmed, figure_recovered, figure_deceased 
+
+
+    if drop_value=='TT' and value=='daily':
+        figure_confirmed=go.Figure(go.Bar(x=time_series['Date'],y=time_series['Daily Confirmed'],width=0.4))
+        figure_recovered=go.Figure(go.Bar(x=time_series['Date'],y=time_series['Daily Recovered'],width=0.4))
+        figure_deceased=go.Figure(go.Bar(x=time_series['Date'],y=time_series['Daily Deceased'],width=0.4))
+
+        figure_confirmed.update_traces(marker_line_color='rgb(255,7,58)',marker_line_width=3,opacity=0.4)
+        figure_confirmed.update_xaxes(rangeslider_visible=False,rangeselector=dict(
+        buttons=list([
+            dict(label="All",step="all"),
+            dict(count=4, label="4M", step="month", stepmode="backward"),
+            dict(count=3, label="3M", step="month", stepmode="backward"),
+            dict(count=2, label="2M", step="month", stepmode="backward"),
+            dict(count=1, label="1M", step="month", stepmode="backward"),])))
+        figure_confirmed.update_layout(plot_bgcolor="#ffffff",
+                                    transition_duration=500,
+                                   xaxis=dict(showline=False, showgrid=False),
+                                   yaxis=dict(showline=False, showgrid=False,side='right'),
+                                   xaxis_range=[last_month,
+                                                max(time_series['Date'])],
+                                   showlegend=False,
+                                   autosize=False,
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
+                                   font=dict(family="Sans Serif", size=9, color="#f50000"),
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%time_series['Total Confirmed'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+
+        figure_recovered.update_traces(marker_line_color='rgb(0,220,0)',marker_line_width=3, opacity=0.4)
+        figure_recovered.update_xaxes(rangeslider_visible=False,rangeselector=dict(
+        buttons=list([
+            dict(label="All",step="all"),
+            dict(count=4, label="4M", step="month", stepmode="backward"),
+            dict(count=3, label="3M", step="month", stepmode="backward"),
+            dict(count=2, label="2M", step="month", stepmode="backward"),
+            dict(count=1, label="1M", step="month", stepmode="backward"),])))    
+        figure_recovered.update_layout(plot_bgcolor='#ffffff',
+                                    transition_duration=500,
+                                   xaxis=dict(showline=False, showgrid=False),
+                                   yaxis=dict(showline=False, showgrid=False,side='right'),
+                                   xaxis_range=[last_month,
+                                                max(time_series['Date'])],
+                                   showlegend=False,autosize=False,width=500,height=240,
+                                  margin=dict(l=50,r=50,b=50,t=50,pad=5),
+                                   font=dict(family="Sans Serif", size=9, color="#00fd00"),
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%time_series['Total Recovered'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+
+        figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.4)                               
+        figure_deceased.update_xaxes(rangeslider_visible=False,rangeselector=dict(
+        buttons=list([
+            dict(label="All",step="all"),
+            dict(count=4, label="4M", step="month", stepmode="backward"),
+            dict(count=3, label="3M", step="month", stepmode="backward"),
+            dict(count=2, label="2M", step="month", stepmode="backward"),
+            dict(count=1, label="1M", step="month", stepmode="backward"),])))
+        figure_deceased.update_layout(plot_bgcolor="#ffffff",
+                                    transition_duration=500,
+                                   xaxis=dict(showline=False, showgrid=False),
+                                   yaxis=dict(showline=False, showgrid=False,side='right'),
+                                   xaxis_range=[last_month,
+                                                max(time_series['Date'])],
+                                   showlegend=False,
+                                   autosize=False,
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
+                                   font=dict(family="Sans Serif", size=9, color="#998d8d"),
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%time_series['Total Deceased'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+
+
+        return figure_confirmed, figure_recovered, figure_deceased 
+
+######################################################################################################################################3
+#####################################################################################################################################3
+    
+    if drop_value!='TT' and value=='total':
+        figure_confirmed=go.Figure(go.Bar(x=state_cumu[state_cumu['Status'] == 'Confirmed']['Date'], y=state_cumu[state_cumu['Status'] == 'Confirmed'][drop_value],width=0.4))
+        figure_recovered=go.Figure(go.Bar(x=state_cumu[state_cumu['Status'] == 'Recovered']['Date'], y=state_cumu[state_cumu['Status'] == 'Recovered'][drop_value],width=0.4))
+        figure_deceased=go.Figure(go.Bar(x=state_cumu[state_cumu['Status'] == 'Deceased']['Date'], y=state_cumu[state_cumu['Status'] == 'Deceased'][drop_value],width=0.4))
+
+        figure_confirmed.update_traces(marker_line_color='rgb(255,7,58)',marker_line_width=3,opacity=0.4)
+        figure_confirmed.update_xaxes(rangeslider_visible=False,rangeselector=dict(buttons=list([dict(label="All",step="all"),dict(count=4, label="4M", step="month", stepmode="backward"),dict(count=3, label="3M", step="month", stepmode="backward"),dict(count=2, label="2M", step="month", stepmode="backward"),dict(count=1, label="1M", step="month", stepmode="backward"),])))
+        figure_confirmed.update_layout(plot_bgcolor="#ffffff",transition_duration=500, xaxis=dict(showline=False, showgrid=False),
+                                   yaxis=dict(showline=False, showgrid=False,side='right'),
+                                   xaxis_range=[last_month, max(time_series['Date'])],
+                                   showlegend=False,
+                                   autosize=False,
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
+                                   font=dict(family="Sans Serif", size=9, color="#f50000"),
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%time_series['Total Confirmed'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+
+        figure_recovered.update_traces(marker_line_color='rgb(0,220,0)',marker_line_width=3, opacity=0.4)
+        figure_recovered.update_xaxes(rangeslider_visible=False,rangeselector=dict(buttons=list([dict(label="All",step="all"),dict(count=4, label="4M", step="month", stepmode="backward"),dict(count=3, label="3M", step="month", stepmode="backward"),dict(count=2, label="2M", step="month", stepmode="backward"),dict(count=1, label="1M", step="month", stepmode="backward"),])))    
+        figure_recovered.update_layout(plot_bgcolor='#ffffff',transition_duration=500,xaxis=dict(showline=False, showgrid=False),
+                                   yaxis=dict(showline=False, showgrid=False,side='right'),
+                                   xaxis_range=[last_month, max(time_series['Date'])],
+                                   showlegend=False,autosize=False,width=500,height=240,
+                                  margin=dict(l=50,r=50,b=50,t=50,pad=5),
+                                   font=dict(family="Sans Serif", size=9, color="#00fd00"),
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%time_series['Total Recovered'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+
+        figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.4)                               
+        figure_deceased.update_xaxes(rangeslider_visible=False,rangeselector=dict(
+        buttons=list([dict(label="All",step="all"),dict(count=4, label="4M", step="month", stepmode="backward"),dict(count=3, label="3M", step="month", stepmode="backward"),dict(count=2, label="2M", step="month", stepmode="backward"),dict(count=1, label="1M", step="month", stepmode="backward"),])))
+        figure_deceased.update_layout(plot_bgcolor="#ffffff",transition_duration=500,xaxis=dict(showline=False, showgrid=False),
+                                   yaxis=dict(showline=False, showgrid=False,side='right'),
+                                   xaxis_range=[last_month, max(time_series['Date'])],
+                                   showlegend=False,
+                                   autosize=False,
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
+                                   font=dict(family="Sans Serif", size=9, color="#998d8d"),
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%time_series['Total Deceased'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+
+
+        return figure_confirmed, figure_recovered, figure_deceased
+
+
+    if drop_value!='TT' and value=='daily':
+        figure_confirmed=go.Figure(go.Bar(x=state_daily[state_daily['Status'] == 'Confirmed']['Date'], y=state_daily[state_daily['Status'] == 'Confirmed'][drop_value],width=0.4))
+        figure_recovered=go.Figure(go.Bar(x=state_daily[state_daily['Status'] == 'Recovered']['Date'], y=state_daily[state_daily['Status'] == 'Recovered'][drop_value],width=0.4))
+        figure_deceased=go.Figure(go.Bar(x=state_daily[state_daily['Status'] == 'Deceased']['Date'], y=state_daily[state_daily['Status'] == 'Deceased'][drop_value],width=0.4))
+
+        figure_confirmed.update_traces(marker_line_color='rgb(255,7,58)',marker_line_width=3,opacity=0.4)
+        figure_confirmed.update_xaxes(rangeslider_visible=False,rangeselector=dict(buttons=list([dict(label="All",step="all"),dict(count=4, label="4M", step="month", stepmode="backward"),dict(count=3, label="3M", step="month", stepmode="backward"),dict(count=2, label="2M", step="month", stepmode="backward"),dict(count=1, label="1M", step="month", stepmode="backward"),])))
+        figure_confirmed.update_layout(plot_bgcolor="#ffffff",transition_duration=500, xaxis=dict(showline=False, showgrid=False),
+                                   yaxis=dict(showline=False, showgrid=False,side='right'),
+                                   xaxis_range=[last_month, max(time_series['Date'])],
+                                   showlegend=False,
+                                   autosize=False,
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
+                                   font=dict(family="Sans Serif", size=9, color="#f50000"),
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%time_series['Total Confirmed'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+
+        figure_recovered.update_traces(marker_line_color='rgb(0,220,0)',marker_line_width=3, opacity=0.4)
+        figure_recovered.update_xaxes(rangeslider_visible=False,rangeselector=dict(buttons=list([dict(label="All",step="all"),dict(count=4, label="4M", step="month", stepmode="backward"),dict(count=3, label="3M", step="month", stepmode="backward"),dict(count=2, label="2M", step="month", stepmode="backward"),dict(count=1, label="1M", step="month", stepmode="backward"),])))    
+        figure_recovered.update_layout(plot_bgcolor='#ffffff',transition_duration=500,xaxis=dict(showline=False, showgrid=False),
+                                   yaxis=dict(showline=False, showgrid=False,side='right'),
+                                   xaxis_range=[last_month, max(time_series['Date'])],
+                                   showlegend=False,autosize=False,width=500,height=240,
+                                  margin=dict(l=50,r=50,b=50,t=50,pad=5),
+                                   font=dict(family="Sans Serif", size=9, color="#00fd00"),
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%time_series['Total Recovered'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+
+        figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.4)                               
+        figure_deceased.update_xaxes(rangeslider_visible=False,rangeselector=dict(
+        buttons=list([dict(label="All",step="all"),dict(count=4, label="4M", step="month", stepmode="backward"),dict(count=3, label="3M", step="month", stepmode="backward"),dict(count=2, label="2M", step="month", stepmode="backward"),dict(count=1, label="1M", step="month", stepmode="backward"),])))
+        figure_deceased.update_layout(plot_bgcolor="#ffffff",transition_duration=500,xaxis=dict(showline=False, showgrid=False),
+                                   yaxis=dict(showline=False, showgrid=False,side='right'),
+                                   xaxis_range=[last_month, max(time_series['Date'])],
+                                   showlegend=False,
+                                   autosize=False,
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
+                                   font=dict(family="Sans Serif", size=9, color="#998d8d"),
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%time_series['Total Deceased'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+
+
+        return figure_confirmed, figure_recovered, figure_deceased
 
 server = app.server
 
