@@ -182,7 +182,7 @@ app.layout = html.Div(children = [
 
 
         html.Div(className = "Gov",children = [   
-            html.H2("mohfw.gov.in Updates"),
+            html.H2("MoHFW Updates"),
             html.Div(children  = [
                 html.Div(children = dcc.Link(go[1],href = go[2],target='_blank'),className = 'Card')for go in gov
                 ])
@@ -190,7 +190,7 @@ app.layout = html.Div(children = [
 
 
         html.Div(className = "WHO",children = [   
-            html.H2("who.int Updates"),
+            html.H2("WHO Updates"),
             html.Div(children  = [
                 html.Div(children = dcc.Link(new[1],href = new[2],target='_blank'),className = 'Card')for new in who
                 ])
