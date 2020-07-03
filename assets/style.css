@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=B612&display=swap');
 body {
-    background-color: #161625;
+    background-color: #ffffff;
     color: #6c757d;
     font-family: 'B612', sans-serif;
     margin: 0px;
@@ -15,15 +15,29 @@ h1 {
 }
 
 h4 {
-    font-size: 28px;
+    font-size: 18px;
+    padding: 0%;
+    line-height: 0px;
+}
+
+h3 {
+    font-size: 22px;
+    color: #5a636b;
+    padding-bottom: 5px;
+    text-align: center;
+    margin-top: -3px;
 }
 
 h5 {
-    font-size: 20px;
+    font-size: 12px;
+    padding: 0px;
+    line-height: 0px;
 }
 
 h6 {
-    font-size: 16px;
+    font-size: 10px;
+    padding: 0px;
+    line-height: 0px;
 }
 
 #last {
@@ -31,63 +45,188 @@ h6 {
     text-align: center;
 }
 
-#Status {
-    text-align: center;
+
+/*
+###############################################################################################################
+###############################################################################################################
+*/
+
+#left_fix_container {
+    text-align: right;
     background-color: white;
+    width: 40%;
+    margin-right: 20px;
+    margin-left: 40px;
+}
+
+#right_container {
+    float: left;
+    width: 30%;
+    margin-left: 30px;
+    padding: 20px;
+}
+
+#trends_container {
+    float: right;
+    width: 15%;
+    font-family: sans-serif;
+}
+
+#spread_trends {
+    float: right;
+    margin-right: 20px;
 }
 
 #StatusConfirmed {
     float: left;
-    margin-left: 40px;
-    margin: 0px 30px;
+    margin: 0px 5% 0px 12%;
     color: #ff073a;
 }
 
 #StatusRecovered {
     float: left;
-    margin: 0px 30px;
+    margin: 0px 5%;
     color: #28a745;
 }
 
 #StatusDeceased {
     float: left;
-    margin: 0px 30px;
+    margin: 0px 5%;
     color: #6c757d;
 }
 
+#StatusActive {
+    float: left;
+    margin: 0px 5%;
+    color: #00c3ff;
+}
+
+.trend_confirmed {
+    color: #ff073a;
+    text-align: center;
+    padding: 2px;
+}
+
+.trend_confirmed H6 {
+    font-size: 16px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin-top: -4px;
+}
+
+.trend_confirmed H4 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 22px;
+    margin-top: 20px;
+}
+
 .dash-spreadsheet-container {
-    border-radius: 15px;
-    overflow: hidden;
-    max-width: 500px;
-}
-
-td {
-    white-space: pre
-}
-
-#tables {
-    display: block;
+    float: left;
+    margin: 20px;
+    margin-right: 20px;
+    width: inherit;
 }
 
 .dash-spinner {
     color: #161625;
 }
 
+#dropdown {
+    height: 36px;
+    width: 100%;
+}
 
-/*
+#graph_right_side {
+    float: right;
+    width: 100%;
+}
 
-#main {
+#scatter_graph_bottom {
+    float: left;
+    width: 100%;
+}
+
+#left_table {
+    font-weight: bold;
+}
+
+a:link,
+a:visited {
+    text-decoration: none;
+    color: white;
+    margin: 10px;
+}
+
+li {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+.Card {
+    margin-top: 10px;
+    max-width: 33%;
+    border-radius: 10px;
+    padding: 10px 5px;
+}
+
+.CollegeAn .Card {
+    background-color: #33d1ff;
+}
+
+.CollegeAn .Card:hover {
+    background-color: #04c7ff;
+}
+
+.cards {
+    margin: 30px;
+    width: 100%;
+}
+
+.Gov .Card {
+    background-color: #46c19c;
+}
+
+.Gov .Card:hover {
+    background-color: #3aaf8c;
+}
+
+.WHO .Card {
+    background-color: #f1c0e7;
+}
+
+.WHO .Card {
+    background-color: #edafe0;
+}
+
+.CollegeAn {
+    float: right;
+}
+
+.Gov {
     float: left;
 }
 
-#state-graph {
+.WHO {
     float: left;
 }
 
-#state-scatter {
-    display: block;
-    float: left;
+.CollegeAn h2 {
+    color: #4560ca;
 }
 
-color: #1e1e30;
-LIGHTER */
+.Gov h2 {
+    color: #30b860;
+}
+
+.WHO h2 {
+    color: #f23c8d;
+}
+
+@media screen and (max-width: 800px) {
+    #left_fix_container {
+        width: 100%;
+    }
+    #right_container {
+        width: 100%;
+    }
+}
