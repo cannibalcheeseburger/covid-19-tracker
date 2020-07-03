@@ -1,17 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=B612&display=swap');
 body {
-    background-color: #ffffff;
+    
     color: #6c757d;
     font-family: 'B612', sans-serif;
     margin: 0px;
     padding: 0px;
 }
 
-h1 {
+#header {
     text-align: center;
-    color: #1877e0;
+    color:#ff0077;
     font-weight: bold;
-    font-size: 48px;
+    font-size: 36px;
+    
+}
+
+h1{
+    margin:0px;
+
+    text-align: center;
 }
 
 h4 {
@@ -44,9 +51,11 @@ h6 {
 
 #last {
     font-size: 12px;
-    text-align: center;
+    text-align: right;
+    float:right;
+    width: 100%;
+    font-family: sans-serif;
 }
-
 
 /*
 ###############################################################################################################
@@ -79,50 +88,80 @@ h6 {
     margin-right: 20px;
 }
 
-
+#top_text{
+    text-align: center;
+}
 
 #StatusConfirmed {
     float:left;
-    margin: 0px 5% 0px 12%;
+    margin: 0% 5% 0% 20%;
     color: #ff073a;
 }
 
 #StatusRecovered {
     float: left;
-    margin: 0px 5%;
+    margin: 0% 5% 0% 5%;
     color: #28a745;
 }
 
 #StatusDeceased {
     float: left;
-    margin: 0px 5%;
+    margin: 0% 5% 0% 5%;
     color: #6c757d;
 }
 
 #StatusActive{
     float: left;
-    margin:0px 5%;
+    margin: 0% 5% 0% 5%;
     color: #00c3ff;
 }
 
-.trend_confirmed {
-    color: #ff073a;
+.trends_right_side {
     text-align: center;
     padding:2px;
 }
 
-.trend_confirmed H6{
-    font-size: 16px;
+#trends_confirmed H6{
+    font-size: 14px;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     margin-top:-4px;
+    color: #ff073a;
 }
 
-.trend_confirmed H4{
+#trends_confirmed H4{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 22px;
+    margin-top:10px;
+    color: #ff073a
+}
+
+#trends_recovered H6{
+    font-size: 14px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin-top:-4px;
+    color: #28a745
+}
+
+#trends_recovered H4{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 22px;
     margin-top:20px;
+    color: #28a745
 }
 
+#trends_deceased H6{
+    font-size: 14px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin-top:-4px;
+    color:#5a636b
+}
+
+#trends_deceased H4{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 22px;
+    margin-top:20px;
+    color:#5a636b
+}
 
 .dash-spreadsheet-container {
     float: left;

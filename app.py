@@ -11,7 +11,7 @@ import dash_table
 import os
 import datetime
 import dateutil.relativedelta
-
+from src.get_pretty_no import num
 today = datetime.date.today()
 last_month = today + dateutil.relativedelta.relativedelta(months=-2)
 
@@ -51,34 +51,37 @@ state_scatter.update_layout(plot_bgcolor='#003f5c',
 
 
 app.layout = html.Div(children = [
-    html.H1(children = "Covid-19Tracker", id = 'h1id'),
+    html.Div(id='header',children=[
+        html.H1('Covid-19 Tracker'),
 
-    html.P(id = 'last',children = "LAST UPDATED: "+str(last_update)),
+    ]),
 
-    html.Div(id = 'left_fix_container',children = [
+    html.P(id = 'last',children = "LAST UPDATED: "+last_update),
+
+    html.Div(id = 'top_text',children = [
         html.Div(id = 'StatusConfirmed',children =[
             html.H5('Confirmed'),
-            html.H6('+ '+str(time_series['Daily Confirmed'].iloc[-1])),
-            html.H4(time_series['Total Confirmed'].iloc[-1])
+            html.H6('+ '+num(time_series['Daily Confirmed'].iloc[-1])),
+            html.H4(num(time_series['Total Confirmed'].iloc[-1]))
         ]),
         html.Div(id = 'StatusRecovered',children =[
             html.H5('Recovered'),
-            html.H6('+ '+str(time_series['Daily Recovered'].iloc[-1])),
-            html.H4(time_series['Total Recovered'].iloc[-1])
+            html.H6('+ '+num(time_series['Daily Recovered'].iloc[-1])),
+            html.H4(num(time_series['Total Recovered'].iloc[-1]))
         ]),
         html.Div(id = 'StatusDeceased',children =[
             html.H5('Deceased'),
-            html.H6('+ '+str(time_series['Daily Deceased'].iloc[-1])),
-            html.H4(time_series['Total Deceased'].iloc[-1])
+            html.H6('+ '+num(time_series['Daily Deceased'].iloc[-1])),
+            html.H4(num(time_series['Total Deceased'].iloc[-1]))
         ]),
         html.Div(id='StatusActive', children=[
             html.H5('Active'),
             html.H6('‎'),
-            html.H4(state_total['Active'].iloc[0]),
+            html.H4(num(state_total['Active'].iloc[0])),
             
-        ]),
+        ]),]),
 
-    html.Div(children=[
+    html.Div(id='left_fix_container',children=[
         dcc.Loading(color = '#ffffff', children = [
             html.Div([
                         dash_table.DataTable(
@@ -108,23 +111,39 @@ app.layout = html.Div(children = [
         ]),
 
     ]),
-]),
 
 
-     html.Div(id='trends_container', children=[
+
+html.Div(id='trends_container',className='trends_right_side', children=[
             html.Div(id='spread_trends',children=[
-                html.Img(src="https://phil.cdc.gov//PHIL_Images/23312/23312_lores.jpg",width='170px',height='100px',style={'marginTop':'0px'})
-                ,html.H3('Spread Trends'),
+                html.H3('Spread Trends'),
+                html.H5('Last Updated on:'),
+                html.H5(time_series['Date'].iloc[-1].strftime("%d %B %Y")),
+                html.H1(html.Br())
             ]),
-            html.Div(className='trend_confirmed',children=[
+            html.Div(id='trends_confirmed',children=[
                 html.H4("Confirmed"),
-                html.H6("+ "+str(time_series['Daily Confirmed'].iloc[-1]))
+                
+                html.H6("+ "+num(time_series['Daily Confirmed'].iloc[-1])),
+                html.P([html.Br(), html.Br(),html.Br()])
+            ]),
+
+            html.Div(id='trends_recovered',children=[
+                html.H4("Recovered"),
+                html.H6('+ '+num(time_series["Daily Recovered"].iloc[-1])),
+                html.P([html.Br(), html.Br(),html.Br()])
+            ]),
+
+            html.Div(id='trends_deceased',children=[
+                html.H4("Deceased"),
+                html.H6('+ '+num(time_series["Daily Deceased"].iloc[-1])),
+                html.P([html.Br(), html.Br(),html.Br()])
             ])
             
     ]),
 
 
-    html.Div(id='right_container', children=[
+html.Div(id='right_container', children=[
         html.Div(id = 'dropdown_top',children = [
             dcc.Dropdown(
                 id = 'dropdown',
@@ -164,7 +183,7 @@ app.layout = html.Div(children = [
         ]),
     ]),
 
-    html.Div(id='scatter_graph_bottom',children=[
+html.Div(id='scatter_graph_bottom',children=[
         dcc.Graph(
             id='state_scatter_graph',
             className='graph',
@@ -172,8 +191,8 @@ app.layout = html.Div(children = [
             config={'displayModeBar': False}
         ),
     ]),
+])
 
-])   
 
 @app.callback(
               [Output('figure_confirmed', 'figure'),
@@ -193,7 +212,7 @@ def update_graph(drop_value, value):
         figure_deceased=go.Figure(go.Bar(x=time_series['Date'],y=time_series['Total Deceased'],width=0.4))
 
 
-        figure_confirmed.update_traces(marker_line_color='rgb(255,7,58)',marker_line_width=3,opacity=0.4)
+        figure_confirmed.update_traces(marker_line_color='rgb(255,7,58)',marker_line_width=3,opacity=0.1)
         figure_confirmed.update_xaxes(rangeslider_visible=False,rangeselector=dict(
         buttons=list([
             dict(label="All",step="all"),
@@ -212,9 +231,9 @@ def update_graph(drop_value, value):
                                    width=460, height=240,
                                    margin=dict(l=0,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#f50000"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%time_series['Total Confirmed'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%num(time_series['Total Confirmed'].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
-        figure_recovered.update_traces(marker_line_color='rgb(0,220,0)',marker_line_width=3, opacity=0.4)
+        figure_recovered.update_traces(marker_line_color='rgb(0,220,0)',marker_line_width=3, opacity=0.1)
         figure_recovered.update_xaxes(rangeslider_visible=False,rangeselector=dict(
         buttons=list([
             dict(label="All",step="all"),
@@ -231,9 +250,9 @@ def update_graph(drop_value, value):
                                    showlegend=False,autosize=False,width=460,height=240,
                                   margin=dict(l=0,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#00fd00"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%time_series['Total Recovered'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%num(time_series['Total Recovered'].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
-        figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.4)                               
+        figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.1)                               
         figure_deceased.update_xaxes(rangeslider_visible=False,rangeselector=dict(
         buttons=list([
             dict(label="All",step="all"),
@@ -252,7 +271,7 @@ def update_graph(drop_value, value):
                                    width=460, height=240,
                                    margin=dict(l=0,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#998d8d"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%time_series['Total Deceased'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%num(time_series['Total Deceased'].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
 
         return figure_confirmed, figure_recovered, figure_deceased 
@@ -263,7 +282,7 @@ def update_graph(drop_value, value):
         figure_recovered=go.Figure(go.Bar(x=time_series['Date'],y=time_series['Daily Recovered'],width=0.4))
         figure_deceased=go.Figure(go.Bar(x=time_series['Date'],y=time_series['Daily Deceased'],width=0.4))
 
-        figure_confirmed.update_traces(marker_line_color='rgb(255,7,58)',marker_line_width=3,opacity=0.4)
+        figure_confirmed.update_traces(marker_line_color='rgb(255,7,58)',marker_line_width=3,opacity=0.1)
         figure_confirmed.update_xaxes(rangeslider_visible=False,rangeselector=dict(
         buttons=list([
             dict(label="All",step="all"),
@@ -282,9 +301,9 @@ def update_graph(drop_value, value):
                                    width=460, height=240,
                                    margin=dict(l=0,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#f50000"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%time_series['Daily Confirmed'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%num(time_series['Daily Confirmed'].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
-        figure_recovered.update_traces(marker_line_color='rgb(0,220,0)',marker_line_width=3, opacity=0.4)
+        figure_recovered.update_traces(marker_line_color='rgb(0,220,0)',marker_line_width=3, opacity=0.1)
         figure_recovered.update_xaxes(rangeslider_visible=False,rangeselector=dict(
         buttons=list([
             dict(label="All",step="all"),
@@ -301,9 +320,9 @@ def update_graph(drop_value, value):
                                    showlegend=False,autosize=False,width=460,height=240,
                                   margin=dict(l=0,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#00fd00"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%time_series['Daily Recovered'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%num(time_series['Daily Recovered'].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
-        figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.4)                               
+        figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.1)                               
         figure_deceased.update_xaxes(rangeslider_visible=False,rangeselector=dict(
         buttons=list([
             dict(label="All",step="all"),
@@ -322,7 +341,7 @@ def update_graph(drop_value, value):
                                    width=460, height=240,
                                    margin=dict(l=0,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#998d8d"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%time_series['Daily Deceased'].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%num(time_series['Daily Deceased'].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
 
         return figure_confirmed, figure_recovered, figure_deceased
@@ -335,7 +354,7 @@ def update_graph(drop_value, value):
         figure_recovered=go.Figure(go.Bar(x=state_cumu[state_cumu['Status'] == 'Recovered']['Date'], y=state_cumu[state_cumu['Status'] == 'Recovered'][drop_value],width=0.4))
         figure_deceased=go.Figure(go.Bar(x=state_cumu[state_cumu['Status'] == 'Deceased']['Date'], y=state_cumu[state_cumu['Status'] == 'Deceased'][drop_value],width=0.4))
 
-        figure_confirmed.update_traces(marker_line_color='rgb(255,7,58)',marker_line_width=3,opacity=0.4)
+        figure_confirmed.update_traces(marker_line_color='rgb(255,7,58)',marker_line_width=3,opacity=0.1)
         figure_confirmed.update_xaxes(rangeslider_visible=False,rangeselector=dict(buttons=list([dict(label="All",step="all"),dict(count=4, label="4M", step="month", stepmode="backward"),dict(count=3, label="3M", step="month", stepmode="backward"),dict(count=2, label="2M", step="month", stepmode="backward"),dict(count=1, label="1M", step="month", stepmode="backward"),])))
         figure_confirmed.update_layout(plot_bgcolor="#ffffff",transition_duration=400, xaxis=dict(showline=False, showgrid=False),
                                    yaxis=dict(showline=False, showgrid=False,side='right'),
@@ -345,9 +364,9 @@ def update_graph(drop_value, value):
                                    width=460, height=240,
                                    margin=dict(l=0,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#f50000"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%state_cumu[state_cumu['Status'] == 'Confirmed'][drop_value].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%num(state_cumu[state_cumu['Status'] == 'Confirmed'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
-        figure_recovered.update_traces(marker_line_color='rgb(0,220,0)',marker_line_width=3, opacity=0.4)
+        figure_recovered.update_traces(marker_line_color='rgb(0,220,0)',marker_line_width=3, opacity=0.1)
         figure_recovered.update_xaxes(rangeslider_visible=False,rangeselector=dict(buttons=list([dict(label="All",step="all"),dict(count=4, label="4M", step="month", stepmode="backward"),dict(count=3, label="3M", step="month", stepmode="backward"),dict(count=2, label="2M", step="month", stepmode="backward"),dict(count=1, label="1M", step="month", stepmode="backward"),])))    
         figure_recovered.update_layout(plot_bgcolor='#ffffff',transition_duration=400,xaxis=dict(showline=False, showgrid=False),
                                    yaxis=dict(showline=False, showgrid=False,side='right'),
@@ -355,9 +374,9 @@ def update_graph(drop_value, value):
                                    showlegend=False,autosize=False,width=460,height=240,
                                   margin=dict(l=0,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#00fd00"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%state_cumu[state_cumu['Status'] == 'Recovered'][drop_value].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%num(state_cumu[state_cumu['Status'] == 'Recovered'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
-        figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.4)                               
+        figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.1)                               
         figure_deceased.update_xaxes(rangeslider_visible=False,rangeselector=dict(
         buttons=list([dict(label="All",step="all"),dict(count=4, label="4M", step="month", stepmode="backward"),dict(count=3, label="3M", step="month", stepmode="backward"),dict(count=2, label="2M", step="month", stepmode="backward"),dict(count=1, label="1M", step="month", stepmode="backward"),])))
         figure_deceased.update_layout(plot_bgcolor="#ffffff",transition_duration=400,xaxis=dict(showline=False, showgrid=False),
@@ -368,7 +387,7 @@ def update_graph(drop_value, value):
                                    width=460, height=240,
                                    margin=dict(l=0,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#998d8d"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%state_cumu[state_cumu['Status'] == 'Deceased'][drop_value].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%num(state_cumu[state_cumu['Status'] == 'Deceased'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
 
         return figure_confirmed, figure_recovered, figure_deceased
@@ -379,7 +398,7 @@ def update_graph(drop_value, value):
         figure_recovered=go.Figure(go.Bar(x=state_daily[state_daily['Status'] == 'Recovered']['Date'], y=state_daily[state_daily['Status'] == 'Recovered'][drop_value],width=0.4))
         figure_deceased=go.Figure(go.Bar(x=state_daily[state_daily['Status'] == 'Deceased']['Date'], y=state_daily[state_daily['Status'] == 'Deceased'][drop_value],width=0.4))
 
-        figure_confirmed.update_traces(marker_line_color='rgb(255,7,58)',marker_line_width=3,opacity=0.4)
+        figure_confirmed.update_traces(marker_line_color='rgb(255,7,58)',marker_line_width=3,opacity=0.1)
         figure_confirmed.update_xaxes(rangeslider_visible=False,rangeselector=dict(buttons=list([dict(label="All",step="all"),dict(count=4, label="4M", step="month", stepmode="backward"),dict(count=3, label="3M", step="month", stepmode="backward"),dict(count=2, label="2M", step="month", stepmode="backward"),dict(count=1, label="1M", step="month", stepmode="backward"),])))
         figure_confirmed.update_layout(plot_bgcolor="#ffffff",transition_duration=400, xaxis=dict(showline=False, showgrid=False),
                                    yaxis=dict(showline=False, showgrid=False,side='right'),
@@ -389,9 +408,9 @@ def update_graph(drop_value, value):
                                    width=460, height=240,
                                    margin=dict(l=0,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#f50000"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%state_daily[state_daily['Status'] == 'Confirmed'][drop_value].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%num(state_daily[state_daily['Status'] == 'Confirmed'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
-        figure_recovered.update_traces(marker_line_color='rgb(0,220,0)',marker_line_width=3, opacity=0.4)
+        figure_recovered.update_traces(marker_line_color='rgb(0,220,0)',marker_line_width=3, opacity=0.1)
         figure_recovered.update_xaxes(rangeslider_visible=False,rangeselector=dict(buttons=list([dict(label="All",step="all"),dict(count=4, label="4M", step="month", stepmode="backward"),dict(count=3, label="3M", step="month", stepmode="backward"),dict(count=2, label="2M", step="month", stepmode="backward"),dict(count=1, label="1M", step="month", stepmode="backward"),])))    
         figure_recovered.update_layout(plot_bgcolor='#ffffff',transition_duration=400,xaxis=dict(showline=False, showgrid=False),
                                    yaxis=dict(showline=False, showgrid=False,side='right'),
@@ -399,9 +418,9 @@ def update_graph(drop_value, value):
                                    showlegend=False,autosize=False,width=460,height=240,
                                   margin=dict(l=0,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#00fd00"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%state_daily[state_daily['Status'] == 'Recovered'][drop_value].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%num(state_daily[state_daily['Status'] == 'Recovered'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
-        figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.4)                               
+        figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.1)                               
         figure_deceased.update_xaxes(rangeslider_visible=False,rangeselector=dict(
         buttons=list([dict(label="All",step="all"),dict(count=4, label="4M", step="month", stepmode="backward"),dict(count=3, label="3M", step="month", stepmode="backward"),dict(count=2, label="2M", step="month", stepmode="backward"),dict(count=1, label="1M", step="month", stepmode="backward"),])))
         figure_deceased.update_layout(plot_bgcolor="#ffffff",transition_duration=400,xaxis=dict(showline=False, showgrid=False),
@@ -412,7 +431,7 @@ def update_graph(drop_value, value):
                                    width=460, height=240,
                                    margin=dict(l=0,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#998d8d"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%state_daily[state_daily['Status'] == 'Deceased'][drop_value].iloc[-1], font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%num(state_daily[state_daily['Status'] == 'Deceased'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
 
         return figure_confirmed, figure_recovered, figure_deceased
