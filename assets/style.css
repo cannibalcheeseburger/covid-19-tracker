@@ -20,6 +20,15 @@ h4 {
     line-height: 0px; 
 }
 
+h3{
+    font-size: 22px;
+    color:#5a636b;
+    padding-bottom: 5px;
+    text-align: center;
+    margin-top:-3px;
+    
+}
+
 h5 {
     font-size: 12px;
     padding: 0px;
@@ -49,26 +58,33 @@ h6 {
     background-color: white;
     width: 40%;
    margin-right:20px;
-    margin-left:60px;
+    margin-left:40px;
 }
 
 #right_container{
     float: left;
     width:30%;
-    margin-right:20px;
-    margin-left:40px;
+    margin-left:30px;
     padding:20px;
-
-
 }
+
+#trends_container{
+    float:right;
+    width:15%;
+    font-family: sans-serif;   
+}
+
+#spread_trends{
+    float:right;
+    margin-right: 20px;
+}
+
 
 
 #StatusConfirmed {
     float:left;
     margin: 0px 5% 0px 12%;
     color: #ff073a;
-    
-
 }
 
 #StatusRecovered {
@@ -88,6 +104,25 @@ h6 {
     margin:0px 5%;
     color: #00c3ff;
 }
+
+.trend_confirmed {
+    color: #ff073a;
+    text-align: center;
+    padding:2px;
+}
+
+.trend_confirmed H6{
+    font-size: 16px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin-top:-4px;
+}
+
+.trend_confirmed H4{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 22px;
+    margin-top:20px;
+}
+
 
 .dash-spreadsheet-container {
     float: left;
