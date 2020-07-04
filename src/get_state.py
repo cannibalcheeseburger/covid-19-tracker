@@ -8,4 +8,5 @@ def states_wise():
     df1 = df1.replace('Total','All States') 
     df2 = pd.read_csv('./csv/population.csv',index_col = 0)
     df = pd.merge(df1, df2, on='State',how='outer')
+    df.loc[0,'Population']=1380004385
     return df , last_update
