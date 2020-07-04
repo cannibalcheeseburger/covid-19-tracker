@@ -17,7 +17,7 @@ from urllib.request import urlopen
 
 
 df,last_update= src.states_wise()
-with open('lol.geojson') as f:
+with open('./geojson/india.geojson') as f:
     geo = json.load(f)
 
 today = datetime.date.today()
