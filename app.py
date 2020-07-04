@@ -109,21 +109,26 @@ app.layout = html.Div(children = [
                             style_as_list_view = True,
                         )
                     ]),
+            ]),
+
         ]),
-
     ]),
-]),
 
 
-     html.Div(id='trends_container', children=[
+    html.Div(id='trends_container', children=[
             html.Div(id='spread_trends',children=[
                 html.Img(src="https://phil.cdc.gov//PHIL_Images/23312/23312_lores.jpg",width='170px',height='100px',style={'marginTop':'0px'})
                 ,html.H3('Spread Trends'),
+
+                
             ]),
-            html.Div(className='trend_confirmed',children=[
-                html.H4("Confirmed"),
-                html.H6("+ "+str(time_series['Daily Confirmed'].iloc[-1]))
-            ])
+
+            
+           html.Div(id = 'Active_per',children = [
+                    html.H4('Active Percentage'),
+                    html.H3(id = 'Active_per_head'),
+                    html.P('No. of cases active for every 100 cases.')
+            ]),
             
     ]),
 

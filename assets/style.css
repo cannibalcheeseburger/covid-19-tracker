@@ -68,8 +68,7 @@ h6 {
 
 #trends_container {
     float: right;
-    width: 15%;
-    font-family: sans-serif;
+    margin-right: 50px;
 }
 
 #spread_trends {
@@ -230,6 +229,10 @@ li {
 }
 
 #choropleth {
+    float: left;
+}
+
+#Active_per {
     float: left;
 }
 
