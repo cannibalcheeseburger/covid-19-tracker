@@ -12,7 +12,13 @@ import os
 import datetime
 import dateutil.relativedelta
 import dash_bootstrap_components as dbc
+import json
+from urllib.request import urlopen
 
+
+df,last_update= src.states_wise()
+with open('lol.geojson') as f:
+    geo = json.load(f)
 
 today = datetime.date.today()
 last_month = today + dateutil.relativedelta.relativedelta(months=-2)
@@ -197,6 +203,11 @@ app.layout = html.Div(children = [
         ]),
 
     ]),
+    dcc.Graph(  id = 'choropleth',figure = px.choropleth_mapbox(df,geojson = geo, color="Confirmed",
+                           locations="State",mapbox_style="carto-positron",
+                           featureidkey="properties.NAME_1",
+                           center={"lat": 28.5934, "lon": 77.2223},zoom=3,color_continuous_scale='Rainbow', range_color=[0,400000])
+    )
         
 ])   
 
