@@ -12,7 +12,12 @@ import os
 import datetime
 import dateutil.relativedelta
 import dash_bootstrap_components as dbc
+import json
+from urllib.request import urlopen
 
+
+with open('./geojson/india.geojson') as f:
+    geo = json.load(f)
 
 today = datetime.date.today()
 last_month = today + dateutil.relativedelta.relativedelta(months=-2)
@@ -103,21 +108,22 @@ app.layout = html.Div(children = [
                             style_as_list_view = True,
                         )
                     ]),
+            ]),
+
         ]),
-
     ]),
-]),
 
 
-     html.Div(id='trends_container', children=[
+    html.Div(id='trends_container', children=[
             html.Div(id='spread_trends',children=[
                 html.Img(src="https://phil.cdc.gov//PHIL_Images/23312/23312_lores.jpg",width='170px',height='100px',style={'marginTop':'0px'})
                 ,html.H3('Spread Trends'),
+
+                
             ]),
-            html.Div(className='trend_confirmed',children=[
-                html.H4("Confirmed"),
-                html.H6("+ "+str(time_series['Daily Confirmed'].iloc[-1]))
-            ])
+
+            
+           
             
     ]),
 
@@ -197,8 +203,67 @@ app.layout = html.Div(children = [
         ]),
 
     ]),
+    dcc.Graph(  id = 'choropleth',figure = px.choropleth_mapbox(state_total,geojson = geo, color="Confirmed",
+                           locations="State",mapbox_style="carto-positron",
+                           featureidkey="properties.NAME_1",
+                           center={"lat": 28.5934, "lon": 77.2223},zoom=3,color_continuous_scale='Rainbow', range_color=[0,400000])
+    ),
+    html.Div(id = "temp",children = [
+        html.H2("Temp Stats"),
+        html.H4("Population:",id = 'pop'),
+        html.H3(id = 'population'),
+        html.Div(id = "Stats_container",children =[
+            html.Div(id = 'Confirmed_per',className = 'stats_card',children = [
+                        html.H5('Confirmed Per Million'),
+                        html.H3(id = 'Confirmed_per_head'),
+                        html.P('No. of cases having virus for every million people tested.')
+                ]),
+            
+            html.Div(id = 'Active_per',className = 'stats_card',children = [
+                        html.H5('Active Percentage'),
+                        html.H3(id = 'Active_per_head'),
+                        html.P('No. of cases active for every 100 confirmed cases.')
+                ]),
+            
+            html.Div(id = 'Mortality_rate',className = 'stats_card',children = [
+                        html.H5('Mortality Rate'),
+                        html.H3(id = 'Mortality_rate_head'),
+                        html.P('No. of cases Passed Away for every 100 confirmed cases.')
+                ]),
+            
+            html.Div(id = 'Recovery_rate',className = 'stats_card',children = [
+                        html.H5('Recovery Rate'),
+                        html.H3(id = 'Recovery_rate_head'),
+                        html.P('No. of cases Recovered for every 100 cases.')
+                ]),
+            
+        ])
+    ]),
         
 ])   
+
+#######################################################
+
+
+@app.callback([Output('Confirmed_per_head','children'),
+                Output('Active_per_head','children'),
+                Output('Mortality_rate_head','children'),
+                Output('Recovery_rate_head','children'),
+                Output('population','children')],
+                [Input('dropdown', 'value')]
+)
+def stats(drop_val):
+    pm = state_total[state_total['State_code']==drop_val]
+    active_per = round(pm['Active']*100/pm['Confirmed'],2)
+    active_per = active_per.astype(str) +'%'
+    con_per_mil = round(pm['Confirmed']*1000000/pm['Population'],2)
+    rec_rate = round(pm['Recovered']*100/pm['Confirmed'],2)
+    rec_rate = rec_rate.astype(str) +'%'
+    mort_rate = round(pm['Deaths']*100/pm['Confirmed'],2)
+    mort_rate = mort_rate.astype(str) +'%'
+    pop = pm['Population']
+    return con_per_mil,active_per,mort_rate,rec_rate,pop
+
 
 @app.callback(
               [Output('figure_confirmed', 'figure'),

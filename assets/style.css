@@ -68,8 +68,7 @@ h6 {
 
 #trends_container {
     float: right;
-    width: 15%;
-    font-family: sans-serif;
+    margin-right: 50px;
 }
 
 #spread_trends {
@@ -164,9 +163,9 @@ li {
 
 .Card {
     margin-top: 10px;
-    max-width: 33%;
     border-radius: 10px;
     padding: 10px 5px;
+    text-align: center;
 }
 
 .CollegeAn .Card {
@@ -180,6 +179,7 @@ li {
 .cards {
     margin: 30px;
     width: 100%;
+    text-align: center;
 }
 
 .Gov .Card {
@@ -199,15 +199,21 @@ li {
 }
 
 .CollegeAn {
-    float: right;
+    float: left;
+    width: 30%;
+    margin-left: 40px;
 }
 
 .Gov {
     float: left;
+    width: 30%;
+    margin-left: 40px;
 }
 
 .WHO {
     float: left;
+    width: 30%;
+    margin-left: 40px;
 }
 
 .CollegeAn h2 {
@@ -220,6 +226,71 @@ li {
 
 .WHO h2 {
     color: #f23c8d;
+}
+
+#choropleth {
+    float: left;
+}
+
+#Active_per {
+    float: left;
+}
+
+#temp {
+    float: left;
+    text-align: center;
+}
+
+.stats_card {
+    width: 200px;
+    height: 200px;
+    margin-left: 20px;
+    padding-top: 34px;
+    border-radius: 15px;
+    padding-bottom: -45px;
+    float: left;
+}
+
+#Confirmed_per {
+    background-color: #ffe0e6;
+    color: #ff3860;
+}
+
+#Confirmed_per H3 {
+    color: #ff3860;
+}
+
+#Active_per {
+    background-color: #eff7ff;
+    color: #007bff;
+}
+
+#Mortality_rate {
+    background-color: #f6f6f7;
+    color: #6c757d;
+}
+
+#Recovery_rate {
+    background-color: #e4f4e8;
+    color: #28a745;
+}
+
+#Active_per H3 {
+    color: #007bff;
+}
+
+#Mortality_rate H3 {
+    color: #6c757d;
+}
+
+#Recovery_rate H3 {
+    color: #28a745;
+}
+
+#population,
+#pop {
+    text-align: left;
+    margin-left: 20px;
 }
 
 @media screen and (max-width: 800px) {
