@@ -15,9 +15,8 @@ import dash_bootstrap_components as dbc
 import json
 from urllib.request import urlopen
 
-
 df,last_update= src.states_wise()
-with open('./geojson/india.geojson') as f:
+with open('geojson/india.geojson') as f:
     geo = json.load(f)
 
 today = datetime.date.today()
@@ -60,6 +59,29 @@ state_scatter.update_layout(plot_bgcolor='#003f5c',
                             'yanchor': 'top'}
                         )
 
+
+############################################
+                                            #Map Of India   
+                                                         #######################################################
+
+colorscale = ["#f7fbff", "#ebf3fb", "#deebf7", "#d2e3f3", "#c6dbef", "#b3d2e9", "#9ecae1",
+    "#85bcdb", "#6baed6", "#57a0ce", "#4292c6", "#3082be", "#2171b5", "#1361a9",
+    "#08519c", "#0b4083", "#08306b"]
+
+map_of_india = px.choropleth_mapbox(df.drop(0),geojson = geo, color="Confirmed",
+                           locations="State",
+                           mapbox_style="carto-positron",
+                           featureidkey="properties.NAME_1",
+                           center={"lat": 22.3, "lon": 82.488860},zoom=3.5,
+                           opacity=0.4,
+                           color_continuous_scale='bluered',
+                           
+                           )   
+
+map_of_india.update_layout(geo=dict(bgcolor= 'rgba(0,0,0,0)'),
+                            paper_bgcolor='#ffffff',
+                            plot_bgcolor='#FFFFFF')
+#######################################################################################
 
 app.layout = html.Div(children = [
     html.H1(children = "Covid-19Tracker", id = 'h1id'),
@@ -203,10 +225,10 @@ app.layout = html.Div(children = [
         ]),
 
     ]),
-    dcc.Graph(  id = 'choropleth',figure = px.choropleth_mapbox(df,geojson = geo, color="Confirmed",
-                           locations="State",mapbox_style="carto-positron",
-                           featureidkey="properties.NAME_1",
-                           center={"lat": 28.5934, "lon": 77.2223},zoom=3,color_continuous_scale='Rainbow', range_color=[0,400000])
+    dcc.Graph(id = 'choropleth',
+    figure = map_of_india,
+    config={'displayModeBar': False},
+    style={'height':650}
     )
         
 ])   
