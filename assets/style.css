@@ -1,45 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=B612&display=swap');
 body {
-    
+    background-color: #ffffff;
     color: #6c757d;
     font-family: 'B612', sans-serif;
     margin: 0px;
     padding: 0px;
 }
 
-#header {
+h1 {
     text-align: center;
-    color:#ff0077;
+    color: #1877e0;
     font-weight: bold;
-    font-size: 36px;
-    
-}
-
-h1{
-    margin:0px;
-
-    text-align: center;
+    font-size: 48px;
 }
 
 h4 {
     font-size: 18px;
     padding: 0%;
-    line-height: 0px; 
+    line-height: 0px;
 }
 
-h3{
+h3 {
     font-size: 22px;
-    color:#5a636b;
+    color: #5a636b;
     padding-bottom: 5px;
     text-align: center;
-    margin-top:-3px;
-    
+    margin-top: -3px;
 }
 
 h5 {
     font-size: 12px;
     padding: 0px;
-    
     line-height: 0px;
 }
 
@@ -51,155 +42,256 @@ h6 {
 
 #last {
     font-size: 12px;
-    text-align: right;
-    float:right;
-    width: 100%;
-    font-family: sans-serif;
+    text-align: center;
 }
+
 
 /*
 ###############################################################################################################
 ###############################################################################################################
 */
 
-#left_fix_container {                                          
+#left_fix_container {
     text-align: right;
     background-color: white;
     width: 40%;
-   margin-right:20px;
-    margin-left:40px;
+    
+    margin-left: 20px;
 }
 
-#right_container{
+#right_container {
     float: left;
-    width:30%;
-    margin-left:30px;
-    padding:20px;
+    width: 30%;
+    margin-left: 20px;
+    padding: 20px;
+    
 }
 
-#trends_container{
-    float:right;
-    width:15%;
-    font-family: sans-serif;   
-}
-
-#spread_trends{
-    float:right;
-    margin-right: 20px;
-}
-
-#top_text{
+#trends_container {
+    float: right;
+    width:250px;
+    margin-right:16px;
     text-align: center;
+    position: relative; top:-100px;
 }
+
 
 #StatusConfirmed {
-    float:left;
-    margin: 0% 5% 0% 20%;
+    float: left;
+    margin: 0px 5% 0px 8%;
     color: #ff073a;
 }
 
 #StatusRecovered {
     float: left;
-    margin: 0% 5% 0% 5%;
+    margin: 0px 5%;
     color: #28a745;
 }
 
 #StatusDeceased {
     float: left;
-    margin: 0% 5% 0% 5%;
+    margin: 0px 5%;
     color: #6c757d;
 }
 
-#StatusActive{
+#StatusActive {
     float: left;
-    margin: 0% 5% 0% 5%;
+    margin-left:5%;
     color: #00c3ff;
-}
-
-.trends_right_side {
-    text-align: center;
-    padding:2px;
-}
-
-#trends_confirmed H6{
-    font-size: 14px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    margin-top:-4px;
-    color: #ff073a;
-}
-
-#trends_confirmed H4{
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: 22px;
-    margin-top:10px;
-    color: #ff073a
-}
-
-#trends_recovered H6{
-    font-size: 14px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    margin-top:-4px;
-    color: #28a745
-}
-
-#trends_recovered H4{
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: 22px;
-    margin-top:20px;
-    color: #28a745
-}
-
-#trends_deceased H6{
-    font-size: 14px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    margin-top:-4px;
-    color:#5a636b
-}
-
-#trends_deceased H4{
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: 22px;
-    margin-top:20px;
-    color:#5a636b
 }
 
 .dash-spreadsheet-container {
     float: left;
     
-    margin: 20px;
-    margin-right:20px;
-    width:inherit;
+    margin-right: 8px;
+    width: inherit;
 }
-
 
 .dash-spinner {
     color: #161625;
 }
 
-
 #dropdown {
-    height:36px;
-    width:100%;    
+    height: 36px;
+    width: 100%;
+    position: relative; top:-100px;
 }
 
-#graph_right_side{
+#tabs_top{
+    position: relative; top:-100px;
+}
+
+#graph_right_side {
+    float: right;
+    width: 100%;
+    position: relative; top:-100px; 
+}
+
+#scatter_graph_bottom {
     float: right;
     width:100%;
+    position: relative; top:-170px;
 }
 
-#scatter_graph_bottom{
+#india_map{
     float:left;
-    width:100%;
+    margin-top:-50px;
+    
+    position: relative; top:-100px;
 }
 
-@media screen and (max-width: 800px){
-    #left_fix_container{
+#left_table {
+    font-weight: bold;
+}
+
+a:link,
+a:visited {
+    text-decoration: none;
+    color: white;
+    margin: 10px;
+}
+
+li {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+}
+
+.Card {
+    margin-top: 10px;
+    border-radius: 10px;
+    padding: 10px 5px;
+    text-align: center;
+    
+}
+
+.CollegeAn .Card {
+    background-color: #33d1ff;
+}
+
+.CollegeAn .Card:hover {
+    background-color: #04c7ff;
+}
+
+.cards {
+    width: 100%;
+    text-align: center;
+    position: relative; top:-200px;
+}
+
+.Gov .Card {
+    background-color: #46c19c;
+}
+
+.Gov .Card:hover {
+    background-color: #3aaf8c;
+}
+
+.WHO .Card {
+    background-color: #f1c0e7;
+}
+
+.WHO .Card:hover {
+    background-color: #edafe0;
+}
+
+.CollegeAn {
+    float: left;
+    width: 30%;
+    margin-left: 40px;
+}
+
+.Gov {
+    float: left;
+    width: 30%;
+    margin-left: 40px;
+}
+
+.WHO {
+    float: left;
+    width: 30%;
+    margin-left: 40px;
+}
+
+.CollegeAn h2 {
+    color: #4560ca;
+}
+
+.Gov h2 {
+    color: #30b860;
+}
+
+.WHO h2 {
+    color: #f23c8d;
+}
+
+#choropleth {
+    float: left;
+}
+
+
+#Confirmed_per {
+    background-color: #ffe0e6;
+    color: #ff3860;
+    float:right;
+    width:100%;
+    margin-bottom: 16px;
+}
+
+
+#Active_per {
+    background-color: #eff7ff;
+    color: #007bff;
+    width: 100%;
+    float:right;
+    margin-bottom: 16px;
+}
+
+#Mortality_rate {
+    background-color: #f6f6f7;
+    color: #6c757d;
+    width: 100%;
+    float:right;
+    margin-bottom: 16px;
+
+}
+
+#Recovery_rate {
+    background-color: #e4f4e8;
+    color: #28a745;
+    width: 100%;
+    float:right;
+    margin-bottom: 16px;
+}
+
+
+#Confirmed_per H3 {
+    color: #ff3860;
+}
+
+#Active_per H3 {
+    color: #007bff;
+}
+
+#Mortality_rate H3 {
+    color: #6c757d;
+}
+
+#Recovery_rate H3 {
+    color: #28a745;
+}
+
+#population,
+#pop {
+    text-align: center;
+    margin-left: 20px;
+}
+
+@media screen and (max-width: 800px) {
+    #left_fix_container {
         width: 100%;
     }
-
-    #right_container{
-        width:100%;
-        
-    }  
-    
+    #right_container {
+        width: 100%;
+    }
 }
