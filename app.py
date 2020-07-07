@@ -6,19 +6,16 @@ from dash.dependencies import Input, Output
 import pandas as pd
 import src
 import plotly.express as px
-import json
 import dash_table
 import os
 import datetime
 import dateutil.relativedelta
 from src.get_pretty_no import num
 import dash_bootstrap_components as dbc
-import json
 from urllib.request import urlopen
 
 df,last_update= src.states_wise()
-with open('geojson/india.geojson') as f:
-    geo = json.load(f)
+
 
 today = datetime.date.today()
 last_month = today + dateutil.relativedelta.relativedelta(months=-2)
@@ -47,21 +44,23 @@ app.title =  'Covid-19 Tracker'
 app._favicon = 'img/favicon.png'
 
 
+                                    #'''Scatter Plot'''#
+state_scatter = px.scatter(state_total[1:], x='Confirmed', y='Deaths', size_max=150,
+                        size='Confirmed', color='State',log_x=True)
+state_scatter.update_layout(plot_bgcolor='#ffffff',
+                        xaxis=dict(showline=False,showgrid=False,zeroline=False),
+                        yaxis=dict(showline=False, showgrid=False,zeroline=False),
+                            title={
+                            'text': 'Relation b/w Deaths and Confirmed Cases',
+                            'y': 0.95,
+                            'x': 0.4,
+                            'xanchor': 'center',
+                            'yanchor': 'top'},
+                            showlegend=True,
+                        )
 
 
-############################################
-                                            #Map Of India   
-                                                         #######################################################
 
-map_of_india = px.choropleth_mapbox(df.drop(0),geojson = geo, color="Confirmed",
-                           locations="State",
-                           mapbox_style="carto-positron",
-                           featureidkey="properties.NAME_1",
-                           center={"lat": 22.3, "lon": 82.488860},zoom=3.5,
-                           opacity=0.7,
-                           color_continuous_scale='Oranges',
-                           height=650,
-                           )   
 
 #######################################################################################
 
@@ -200,10 +199,14 @@ app.layout = html.Div(children = [
         ]),
     ]),
 
-    html.Div(id='india_map',children=[
-        dcc.Graph(  id = 'choropleth',figure = map_of_india,config={'displayModeBar': False}),
+    html.Div(id='scatter_graph_bottom',children=[
+        dcc.Graph(
+            id='state_scatter_graph',
+            className='graph',
+            figure=state_scatter,
+            config={'displayModeBar': False}
+        ),
     ]),
-
 
 
     html.Div(className = 'cards',children=[
@@ -233,6 +236,9 @@ app.layout = html.Div(children = [
 
     ]),
 
+    
+
+        
 ])   
 
 #######################################################
