@@ -55,30 +55,30 @@ h6 {
     text-align: right;
     background-color: white;
     width: 40%;
-    margin-right: 20px;
-    margin-left: 40px;
+    
+    margin-left: 20px;
 }
 
 #right_container {
     float: left;
     width: 30%;
-    margin-left: 30px;
+    margin-left: 20px;
     padding: 20px;
+    
 }
 
 #trends_container {
     float: right;
-    margin-right: 50px;
+    width:250px;
+    margin-right:16px;
+    text-align: center;
+    position: relative; top:-100px;
 }
 
-#spread_trends {
-    float: right;
-    margin-right: 20px;
-}
 
 #StatusConfirmed {
     float: left;
-    margin: 0px 5% 0px 12%;
+    margin: 0px 5% 0px 8%;
     color: #ff073a;
 }
 
@@ -96,32 +96,14 @@ h6 {
 
 #StatusActive {
     float: left;
-    margin: 0px 5%;
+    margin-left:5%;
     color: #00c3ff;
-}
-
-.trend_confirmed {
-    color: #ff073a;
-    text-align: center;
-    padding: 2px;
-}
-
-.trend_confirmed H6 {
-    font-size: 16px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    margin-top: -4px;
-}
-
-.trend_confirmed H4 {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: 22px;
-    margin-top: 20px;
 }
 
 .dash-spreadsheet-container {
     float: left;
-    margin: 20px;
-    margin-right: 20px;
+    
+    margin-right: 8px;
     width: inherit;
 }
 
@@ -132,16 +114,30 @@ h6 {
 #dropdown {
     height: 36px;
     width: 100%;
+    position: relative; top:-100px;
+}
+
+#tabs_top{
+    position: relative; top:-100px;
 }
 
 #graph_right_side {
     float: right;
     width: 100%;
+    position: relative; top:-100px; 
 }
 
 #scatter_graph_bottom {
-    float: left;
-    width: 100%;
+    float: right;
+    width:100%;
+    position: relative; top:-170px;
+}
+
+#india_map{
+    float:left;
+    margin-top:-50px;
+    
+    position: relative; top:-100px;
 }
 
 #left_table {
@@ -166,6 +162,7 @@ li {
     border-radius: 10px;
     padding: 10px 5px;
     text-align: center;
+    
 }
 
 .CollegeAn .Card {
@@ -177,9 +174,9 @@ li {
 }
 
 .cards {
-    margin: 30px;
     width: 100%;
     text-align: center;
+    position: relative; top:-200px;
 }
 
 .Gov .Card {
@@ -194,7 +191,7 @@ li {
     background-color: #f1c0e7;
 }
 
-.WHO .Card {
+.WHO .Card:hover {
     background-color: #edafe0;
 }
 
@@ -232,47 +229,44 @@ li {
     float: left;
 }
 
-#Active_per {
-    float: left;
-}
-
-#temp {
-    float: left;
-    text-align: center;
-}
-
-.stats_card {
-    width: 200px;
-    height: 200px;
-    margin-left: 20px;
-    padding-top: 34px;
-    border-radius: 15px;
-    padding-bottom: -45px;
-    float: left;
-}
 
 #Confirmed_per {
     background-color: #ffe0e6;
     color: #ff3860;
+    float:right;
+    width:100%;
+    margin-bottom: 16px;
 }
 
-#Confirmed_per H3 {
-    color: #ff3860;
-}
 
 #Active_per {
     background-color: #eff7ff;
     color: #007bff;
+    width: 100%;
+    float:right;
+    margin-bottom: 16px;
 }
 
 #Mortality_rate {
     background-color: #f6f6f7;
     color: #6c757d;
+    width: 100%;
+    float:right;
+    margin-bottom: 16px;
+
 }
 
 #Recovery_rate {
     background-color: #e4f4e8;
     color: #28a745;
+    width: 100%;
+    float:right;
+    margin-bottom: 16px;
+}
+
+
+#Confirmed_per H3 {
+    color: #ff3860;
 }
 
 #Active_per H3 {
@@ -289,7 +283,7 @@ li {
 
 #population,
 #pop {
-    text-align: left;
+    text-align: center;
     margin-left: 20px;
 }
 
