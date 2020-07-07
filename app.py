@@ -13,12 +13,9 @@ import datetime
 import dateutil.relativedelta
 from src.get_pretty_no import num
 import dash_bootstrap_components as dbc
-import json
 from urllib.request import urlopen
 
 df,last_update= src.states_wise()
-with open('geojson/india.geojson') as f:
-    geo = json.load(f)
 
 today = datetime.date.today()
 last_month = today + dateutil.relativedelta.relativedelta(months=-2)
@@ -63,19 +60,6 @@ state_scatter.update_layout(plot_bgcolor='#ffffff',
                         )
 
 
-############################################
-                                            #Map Of India   
-                                                         #######################################################
-
-map_of_india = px.choropleth_mapbox(df.drop(0),geojson = geo, color="Confirmed",
-                           locations="State",
-                           mapbox_style="carto-positron",
-                           featureidkey="properties.NAME_1",
-                           center={"lat": 22.3, "lon": 82.488860},zoom=3.5,
-                           opacity=0.7,
-                           color_continuous_scale='Oranges',
-                           height=650,
-                           )   
 
 #######################################################################################
 
@@ -212,19 +196,6 @@ app.layout = html.Div(children = [
                 config={'displayModeBar': False}
             ),
         ]),
-    ]),
-
-    html.Div(id='india_map',children=[
-        dcc.Graph(  id = 'choropleth',figure = map_of_india,config={'displayModeBar': False}),
-    ]),
-
-    html.Div(id='scatter_graph_bottom',children=[
-        dcc.Graph(
-            id='state_scatter_graph',
-            className='graph',
-            figure=state_scatter,
-            config={'displayModeBar': False}
-        ),
     ]),
 
 
