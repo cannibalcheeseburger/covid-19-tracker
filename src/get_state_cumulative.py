@@ -14,7 +14,7 @@ def state_cumu():
 
     df = df.pivot(index='Date', columns='Status')
     df = df.cumsum(axis=0)
-    df = df.stack(-1)
+    df = df.stack()
 
 
     date = pd.DataFrame(date)

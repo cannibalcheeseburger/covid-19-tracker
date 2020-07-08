@@ -7,15 +7,24 @@ body {
     padding: 0px;
 }
 
+
+/*color: #1877e0;*/
 h1 {
     text-align: center;
-    color: #1877e0;
+    color:#08090a;
     font-weight: bold;
-    font-size: 48px;
+    font-size: 64px;
+    text-shadow: 2px 2px #6c757d;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-variant: small-caps;
+    display: inline;
+    line-height: 32px;
+    position: relative; right: -8%;
+
 }
 
 h4 {
-    font-size: 18px;
+    font-size: 22px;
     padding: 0%;
     line-height: 0px;
 }
@@ -35,14 +44,22 @@ h5 {
 }
 
 h6 {
-    font-size: 10px;
+    font-size: 14px;
     padding: 0px;
     line-height: 0px;
 }
 
+#header{
+    text-align: center;
+    margin-bottom: 32px;
+    padding-top:48px;
+}
+
 #last {
     font-size: 12px;
-    text-align: center;
+    text-align: right;
+    float: right;
+    margin-top: 32px;
 }
 
 
@@ -51,53 +68,75 @@ h6 {
 ###############################################################################################################
 */
 
-#left_fix_container {
+
+#left_fix_container_1 {
+    text-align: center;
+    background-color: white;
+  margin:0px 0px 16px 10%;
+}
+
+#left_fix_container_2 {
     text-align: right;
     background-color: white;
-    width: 40%;
+    width: 50%;
+    float:left;
+    margin: 16px 0px 16px 32px;
     
-    margin-left: 20px;
 }
 
 #right_container {
-    float: left;
-    width: 30%;
-    margin-left: 20px;
-    padding: 20px;
+    float: right;
+    width: 40%;
+    margin:16px 32px 0px 0px;
+    
     
 }
 
 #trends_container {
-    float: right;
-    width:250px;
-    margin-right:16px;
+    float:left;
+    width: 45%;
+    margin:0px 8px 0px 8px;
     text-align: center;
-    position: relative; top:-100px;
+    padding:8px;
 }
 
 
 #StatusConfirmed {
     float: left;
-    margin: 0px 5% 0px 8%;
     color: #ff073a;
+    background-color: #f7dce1;
+    padding:8px;
+    width:20%;
+    margin:8px;
+    
 }
 
 #StatusRecovered {
     float: left;
-    margin: 0px 5%;
     color: #28a745;
+    background-color: #e4f4e8;
+    width:20%;
+    padding:8px;
+    margin:8px;
+    
 }
 
 #StatusDeceased {
     float: left;
-    margin: 0px 5%;
-    color: #6c757d;
+    padding:8px;
+    color: #6c757d; 
+    background-color: #f6f6f6;
+    margin:8px;
+    width:20%;
 }
 
 #StatusActive {
     float: left;
-    margin-left:5%;
     color: #00c3ff;
+    width:20%;
+    margin:8px;
+    background-color: #eff7ff;
+    padding:8px;
 }
 
 .dash-spreadsheet-container {
@@ -114,30 +153,20 @@ h6 {
 #dropdown {
     height: 36px;
     width: 100%;
-    position: relative; top:-100px;
-}
 
-#tabs_top{
-    position: relative; top:-100px;
 }
 
 #graph_right_side {
     float: right;
     width: 100%;
-    position: relative; top:-100px; 
+    
 }
 
 #scatter_graph_bottom {
-    float: right;
     width:100%;
-    position: relative; top:-170px;
-}
-
-#india_map{
     float:left;
-    margin-top:-50px;
-    
-    position: relative; top:-100px;
+    margin:16px;    
+
 }
 
 #left_table {
@@ -176,7 +205,7 @@ li {
 .cards {
     width: 100%;
     text-align: center;
-    position: relative; top:-200px;
+    margin:16px;
 }
 
 .Gov .Card {
@@ -198,19 +227,20 @@ li {
 .CollegeAn {
     float: left;
     width: 30%;
-    margin-left: 40px;
+    margin:16px;
+    
 }
 
 .Gov {
     float: left;
     width: 30%;
-    margin-left: 40px;
+    margin:16px;
 }
 
 .WHO {
     float: left;
     width: 30%;
-    margin-left: 40px;
+    margin: 16px;
 }
 
 .CollegeAn h2 {
@@ -225,43 +255,39 @@ li {
     color: #f23c8d;
 }
 
-#choropleth {
-    float: left;
-}
-
 
 #Confirmed_per {
     background-color: #ffe0e6;
     color: #ff3860;
-    float:right;
-    width:100%;
-    margin-bottom: 16px;
+    float:left;
+    width:25%;
+    margin: 4px;
 }
 
 
 #Active_per {
     background-color: #eff7ff;
     color: #007bff;
-    width: 100%;
-    float:right;
-    margin-bottom: 16px;
+    width:22%;
+    float:left;
+    margin: 4px;
 }
 
 #Mortality_rate {
     background-color: #f6f6f7;
     color: #6c757d;
-    width: 100%;
-    float:right;
-    margin-bottom: 16px;
+    width:150px;
+    float:left;
+    margin:4px;
 
 }
 
 #Recovery_rate {
     background-color: #e4f4e8;
     color: #28a745;
-    width: 100%;
-    float:right;
-    margin-bottom: 16px;
+    width:22%;
+    float:left;
+    margin:4px;
 }
 
 
@@ -288,7 +314,7 @@ li {
 }
 
 @media screen and (max-width: 800px) {
-    #left_fix_container {
+    #left_fix_container_2 {
         width: 100%;
     }
     #right_container {

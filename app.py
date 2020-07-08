@@ -49,10 +49,10 @@ app._favicon = 'img/favicon.png'
 
                                     #'''Scatter Plot'''#
 state_scatter = px.scatter(state_total[1:], x='Confirmed', y='Deaths', size_max=150,
-                        size='Confirmed', color='State',log_x=True)
+                        size='Confirmed', color='State',log_x=True)                        
 state_scatter.update_layout(plot_bgcolor='#ffffff',
-                        xaxis=dict(showline=False,showgrid=False,zeroline=False),
-                        yaxis=dict(showline=False, showgrid=False,zeroline=False),
+                        xaxis={'linecolor': 'black','linewidth':2, 'mirror':True},
+                        yaxis={'linecolor': 'black','linewidth':2,'mirror':True},
                             title={
                             'text': 'Relation b/w Deaths and Confirmed Cases',
                             'y': 0.95,
@@ -62,29 +62,15 @@ state_scatter.update_layout(plot_bgcolor='#ffffff',
                             showlegend=True,
                         )
 
-
-############################################
-                                            #Map Of India   
-                                                         #######################################################
-
-map_of_india = px.choropleth_mapbox(df.drop(0),geojson = geo, color="Confirmed",
-                           locations="State",
-                           mapbox_style="carto-positron",
-                           featureidkey="properties.NAME_1",
-                           center={"lat": 22.3, "lon": 82.488860},zoom=3.5,
-                           opacity=0.7,
-                           color_continuous_scale='Oranges',
-                           height=650,
-                           )   
-
-#######################################################################################
-
 app.layout = html.Div(children = [
-    html.H1(children = "Covid-19Tracker", id = 'h1id'),
+
+    html.Div(id='header',children=[
+    html.H1(id = 'h1id',children = "Covid-19 Tracker"),
 
     html.P(id = 'last',children = "LAST UPDATED: "+str(last_update)),
+    ]),
 
-    html.Div(id = 'left_fix_container',children = [
+    html.Div(id = 'left_fix_container_1',children = [
         html.Div(id = 'StatusConfirmed',children =[
             html.H5('Confirmed'),
             html.H6('+ '+num(time_series['Daily Confirmed'].iloc[-1])),
@@ -105,9 +91,9 @@ app.layout = html.Div(children = [
             html.H6('‎'),
             html.H4(num(state_total['Active'].iloc[0])),
             
-        ]),
+        ]),]),
     
-    html.Div(children=[
+    html.Div(id='left_fix_container_2',children=[
         dcc.Loading(color = '#ffffff', children = [
             html.Div([
                         dash_table.DataTable(
@@ -135,44 +121,6 @@ app.layout = html.Div(children = [
             ]),
 
         ]),
-    ]),
-
-
-    html.Div(id='trends_container', children=[
-            html.Div(id='spread_trends',children=[
-                html.H3('Spread Trends'),
-                
-            ]),
-
-                html.H4("Population:",id = 'pop'),
-                html.H3(id = 'population'),
-                html.Div(id = 'Confirmed_per',className = 'stats_card',children = [
-                            html.H5('Confirmed Per Million'),
-                            html.H3(id = 'Confirmed_per_head'),
-                            html.P('No. of cases having virus for every million people tested.')
-                        ]),
-            
-                html.Div(id = 'Recovery_rate',className = 'stats_card',children = [
-                        html.H5('Recovery Rate'),
-                        html.H3(id = 'Recovery_rate_head'),
-                        html.P('No. of cases Recovered for every 100 cases.')
-                        ]),
-
-                html.Div(id = 'Active_per',className = 'stats_card',children = [
-                        html.H5('Active Percentage'),
-                        html.H3(id = 'Active_per_head'),
-                        html.P('No. of cases active for every 100 confirmed cases.')
-                        ]),
-            
-                html.Div(id = 'Mortality_rate',className = 'stats_card',children = [
-                        html.H5('Mortality Rate'),
-                        html.H3(id = 'Mortality_rate_head'),
-                        html.P('No. of cases Passed Away for every 100 confirmed cases.')
-                    ]),
-            
-                ]),
-    
-
 
     html.Div(id='right_container', children=[
         html.Div(id = 'dropdown_top',children = [
@@ -214,9 +162,40 @@ app.layout = html.Div(children = [
         ]),
     ]),
 
-    html.Div(id='india_map',children=[
-        dcc.Graph(  id = 'choropleth',figure = map_of_india,config={'displayModeBar': False}),
-    ]),
+
+    html.Div(id='trends_container', children=[
+            html.Div(id='spread_trends',children=[
+                html.H3('Spread Trends'),
+                
+            ]),
+
+                html.H4("Population:",id = 'pop'),
+                html.H3(id = 'population'),
+                html.Div(id = 'Confirmed_per',className = 'stats_card',children = [
+                            html.H5('Confirmed Per Million'),
+                            html.H3(id = 'Confirmed_per_head'),
+                            html.P('No. of cases having virus for every million people tested.')
+                        ]),
+            
+                html.Div(id = 'Recovery_rate',className = 'stats_card',children = [
+                        html.H5('Recovery Rate'),
+                        html.H3(id = 'Recovery_rate_head'),
+                        html.P('No. of cases Recovered for every 100 cases.')
+                        ]),
+
+                html.Div(id = 'Active_per',className = 'stats_card',children = [
+                        html.H5('Active Percentage'),
+                        html.H3(id = 'Active_per_head'),
+                        html.P('No. of cases active for every 100 confirmed cases.')
+                        ]),
+            
+                html.Div(id = 'Mortality_rate',className = 'stats_card',children = [
+                        html.H5('Mortality Rate'),
+                        html.H3(id = 'Mortality_rate_head'),
+                        html.P('No. of cases Passed Away for every 100 confirmed cases.')
+                    ]),
+            
+                ]),
 
     html.Div(id='scatter_graph_bottom',children=[
         dcc.Graph(
@@ -314,8 +293,8 @@ def update_graph(drop_value, value):
                                                 max(time_series['Date'])],
                                    showlegend=False,
                                    autosize=False,
-                                   width=460, height=240,
-                                   margin=dict(l=0,r=50,b=50,t=50,pad=5),
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=0),
                                    font=dict(family="Sans Serif", size=9, color="#f50000"),
                                    annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%num(time_series['Total Confirmed'].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
@@ -333,8 +312,8 @@ def update_graph(drop_value, value):
                                    yaxis=dict(showline=False, showgrid=False,side='right'),
                                    xaxis_range=[last_month,
                                                 max(time_series['Date'])],
-                                   showlegend=False,autosize=False,width=460,height=240,
-                                  margin=dict(l=0,r=50,b=50,t=50,pad=5),
+                                   showlegend=False,autosize=False,width=500,height=240,
+                                  margin=dict(l=50,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#00fd00"),
                                    annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%num(time_series['Total Recovered'].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
@@ -354,8 +333,8 @@ def update_graph(drop_value, value):
                                                 max(time_series['Date'])],
                                    showlegend=False,
                                    autosize=False,
-                                   width=460, height=240,
-                                   margin=dict(l=0,r=50,b=50,t=50,pad=5),
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#998d8d"),
                                    annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%num(time_series['Total Deceased'].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
@@ -384,8 +363,8 @@ def update_graph(drop_value, value):
                                                 max(time_series['Date'])],
                                    showlegend=False,
                                    autosize=False,
-                                   width=460, height=240,
-                                   margin=dict(l=0,r=50,b=50,t=50,pad=5),
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#f50000"),
                                    annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%num(time_series['Daily Confirmed'].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
@@ -403,8 +382,8 @@ def update_graph(drop_value, value):
                                    yaxis=dict(showline=False, showgrid=False,side='right'),
                                    xaxis_range=[last_month,
                                                 max(time_series['Date'])],
-                                   showlegend=False,autosize=False,width=460,height=240,
-                                  margin=dict(l=0,r=50,b=50,t=50,pad=5),
+                                   showlegend=False,autosize=False,width=500,height=240,
+                                  margin=dict(l=50,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#00fd00"),
                                    annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%num(time_series['Daily Recovered'].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
@@ -424,8 +403,8 @@ def update_graph(drop_value, value):
                                                 max(time_series['Date'])],
                                    showlegend=False,
                                    autosize=False,
-                                   width=460, height=240,
-                                   margin=dict(l=0,r=50,b=50,t=50,pad=5),
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#998d8d"),
                                    annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%num(time_series['Daily Deceased'].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
@@ -447,8 +426,8 @@ def update_graph(drop_value, value):
                                    xaxis_range=[last_month, max(time_series['Date'])],
                                    showlegend=False,
                                    autosize=False,
-                                   width=460, height=240,
-                                   margin=dict(l=0,r=50,b=50,t=50,pad=5),
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#f50000"),
                                    annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%num(state_cumu[state_cumu['Status'] == 'Confirmed'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
@@ -457,10 +436,10 @@ def update_graph(drop_value, value):
         figure_recovered.update_layout(plot_bgcolor='#ffffff',transition_duration=400,xaxis=dict(showline=False, showgrid=False),
                                    yaxis=dict(showline=False, showgrid=False,side='right'),
                                    xaxis_range=[last_month, max(time_series['Date'])],
-                                   showlegend=False,autosize=False,width=460,height=240,
-                                  margin=dict(l=0,r=50,b=50,t=50,pad=5),
+                                   showlegend=False,autosize=False,width=500,height=240,
+                                  margin=dict(l=50,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#00fd00"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%num(state_cumu[state_cumu['Status'] == 'Recovered'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%num(state_cumu[state_cumu['Status'] == 'Deceased'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
         figure_deceased.update_traces(marker_line_color='rgb(153, 141, 141)',marker_line_width=3, opacity=0.6)                               
         figure_deceased.update_xaxes(rangeslider_visible=False,rangeselector=dict(
@@ -470,10 +449,10 @@ def update_graph(drop_value, value):
                                    xaxis_range=[last_month, max(time_series['Date'])],
                                    showlegend=False,
                                    autosize=False,
-                                   width=460, height=240,
-                                   margin=dict(l=0,r=50,b=50,t=50,pad=5),
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#998d8d"),
-                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%num(state_cumu[state_cumu['Status'] == 'Deceased'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
+                                   annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%num(state_cumu[state_cumu['Status'] == 'Recovered'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
 
         return figure_confirmed, figure_recovered, figure_deceased
@@ -491,8 +470,8 @@ def update_graph(drop_value, value):
                                    xaxis_range=[last_month, max(time_series['Date'])],
                                    showlegend=False,
                                    autosize=False,
-                                   width=460, height=240,
-                                   margin=dict(l=0,r=50,b=50,t=50,pad=5),
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#f50000"),
                                    annotations=[dict(x=0,y=1,showarrow=False,text="Confirmed<br>%s"%num(state_daily[state_daily['Status'] == 'Confirmed'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
@@ -501,8 +480,8 @@ def update_graph(drop_value, value):
         figure_recovered.update_layout(plot_bgcolor='#ffffff',transition_duration=400,xaxis=dict(showline=False, showgrid=False),
                                    yaxis=dict(showline=False, showgrid=False,side='right'),
                                    xaxis_range=[last_month, max(time_series['Date'])],
-                                   showlegend=False,autosize=False,width=460,height=240,
-                                  margin=dict(l=0,r=50,b=50,t=50,pad=5),
+                                   showlegend=False,autosize=False,width=500,height=240,
+                                  margin=dict(l=50,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#00fd00"),
                                    annotations=[dict(x=0,y=1,showarrow=False,text="Recovered<br>%s"%num(state_daily[state_daily['Status'] == 'Recovered'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
@@ -514,8 +493,8 @@ def update_graph(drop_value, value):
                                    xaxis_range=[last_month, max(time_series['Date'])],
                                    showlegend=False,
                                    autosize=False,
-                                   width=460, height=240,
-                                   margin=dict(l=0,r=50,b=50,t=50,pad=5),
+                                   width=500, height=240,
+                                   margin=dict(l=50,r=50,b=50,t=50,pad=5),
                                    font=dict(family="Sans Serif", size=9, color="#998d8d"),
                                    annotations=[dict(x=0,y=1,showarrow=False,text="Deceased<br>%s"%num(state_daily[state_daily['Status'] == 'Deceased'][drop_value].iloc[-1]), font =dict(size = 16),xref="paper",yref="paper")])
 
