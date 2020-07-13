@@ -1,0 +1,255 @@
+\documentclass[11pt,a4paper]{report}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\graphicspath{ {./images/} }
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\space},
+}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\begin{document}
+
+
+\begin{titlepage}
+
+    \newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+    
+    \center 
+    \includegraphics[width=0.5\textwidth, height=9cm]{nith-logo.png}\\ % Include a department/university logo - this will require the graphicx package
+    
+
+    \textsc{\Large National Institute of Technology, Hamirpur}\\[0.5cm] % Name of your university/college
+    \textsc{\large Department of Computer Science and Engineering}\\[0.5cm] % Major heading such as course name
+    
+    \HRule \\[0.4cm]
+    { \huge \bfseries Covid-19 Tracker}\\[0.2cm] % Title of your document
+    \HRule \\[1cm]
+  
+    \date{date}{10 }{July, }{2020}\\[1cm]
+
+    \begin{minipage}{0.5\textwidth}
+        \begin{flushleft} \large
+        \emph{Author:}\\
+        \vspace{2mm}
+        Kashish Srivastav (185014)
+        \end{flushleft}
+        \end{minipage}   
+    ~
+    \begin{minipage}{0.4\textwidth}
+    \begin{flushright} \large
+    \emph{Supervisor:} \\
+    \vspace{2mm}
+    Dr. Chandra \textsc{Shekhar} % Supervisor's Name
+    \end{flushright}
+    \end{minipage}
+    ~
+    \begin{minipage}{0.93\textwidth}
+        \begin{flushleft} \large
+        \vspace{1mm}
+        Dipesh Chopra (185015)
+        \end{flushleft}
+        \end{minipage} 
+    ~    
+    \begin{minipage}{0.93\textwidth}
+        \begin{flushleft} \large
+        \vspace{1mm}
+        Akash Rana (185034)
+        \end{flushleft}
+        \end{minipage}\\[2cm]
+    
+    \vfill 
+    
+    \end{titlepage}
+    
+
+    \renewcommand{\familydefault}{\rmdefault}
+\section*{The Abstract}
+
+\begin{quote}
+``A dashboard is a visual display of the most important information needed to achieve one or more objectives; consolidated and arranged on a single screen so the information can be monitored at a glance."
+\end{quote}
+    Ever since the first cases of COVID-19 appeared, it was unclear exactly how many people were exposed to the virus. Fortunately, India has dramatically increased our testing capacity since then. But we’re still playing catch-up. And in the face of conflicting reports of the number of confirmed cases, our team built a dashboard to show the most accurate data we could find, in the cleanest way possible. When our team was deciding which stack to use, we knew that our primary goal of cleaning and displaying healthcare data would best be accomplished if we wrote our application in Python. Apart from using Python we used CSS to style our dashboard. 
+
+\pagebreak
+\section*{Installation}
+
+    The dashboard has been deployed using Heroku platform as a service (PaaS) and can be found at \url{https://covid-19-co.herokuapp.com/}\\
+    
+    
+    \noindent If you want to deploy the app on your local machine, follow the steps below.
+
+    \begin{itemize}
+    \item The source code can be found at 
+    
+    \begin{lstlisting}
+    git clone https://github.com/cannibalcheeseburger/covid-19-tracker.git
+    cd covid-19-tracker
+    \end{lstlisting}
+
+    \item Requirements
+    \begin{lstlisting}
+    python -m pip install -r requirements.txt
+    \end{lstlisting}
+
+    \item Running Program
+    \begin{lstlisting}
+    python app.py
+    \end{lstlisting}
+
+    \item Open a browser and connect to the host server. Usually, the server is hosted at port: 8050. Enter the following address in the address bar. \url{http://127.0.0.1:8050/}
+
+\end{itemize}
+    \pagebreak
+    \section*{Usage}
+    
+    The dashboard looks like the image below.
+    \newline
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=1\textwidth]{index.png}
+        \caption{Dashboard.}
+    \end{figure}    
+    
+    \noindent At the top of the dashboard we can find the total number of Confirmed, Recovered, Deceased and Active cases. Daily increase in the number of cases is also displayed.
+    
+    \begin{figure}[h]
+        \hspace*{-1.2cm} 
+    \begin{tikzpicture}
+        \node[above right](image) at (0,0){
+            \includegraphics[width=1\textwidth]{top.png}};
+        
+            \begin{scope}[
+                x={($0.1*(image.south east)$)},
+                y={($0.1*(image.north west)$)}]
+                 
+                   
+                    \draw[stealth-, thin,black] (1,5.25) -- ++(-0.5,0)
+                    node[left,black]{\tiny Daily cases};
+
+                    \draw[stealth-, thin,black] (0.80,3.5) -- ++(-0.5,0)
+                    node[left,black]{\tiny Total cases};
+
+            \end{scope}         
+    \end{tikzpicture}
+    \caption{Top bar}
+    \end{figure}
+
+    \noindent The table to the left summarize the total number of cases state-wise. We can also view the individual time-series graphs of confirmed, recovered, deceased and active cases by selecting states from the given dropdown. It also has two different tabs to show the graphs on Total/Daily basis.
+
+    \begin{figure}[h] 
+    \begin{tikzpicture}
+        \node[above right](image) at (0,0){
+            \includegraphics[width=1\textwidth]{drop-and-tab.png}};
+        
+            \begin{scope}[
+                x={($0.1*(image.south east)$)},
+                y={($0.1*(image.north west)$)}]
+                 
+
+                \draw[stealth-, very thin, black] (1.75,7) -- ++(1,1)
+                    node[right,black]{\tiny Dropdown}; 
+
+                \draw[latex-, very thin,black] (3,2.5) edge (5,0)(7,2.5) -- (5,0)
+                    node[below,black]{\tiny Tabs}; 
+
+            \end{scope}         
+    \end{tikzpicture}
+    \caption{Dropdown and Tabs}
+    \end{figure}
+
+    \vspace{1cm}
+    \noindent Using the graphs is very easy and simplified. Initially, date axis begin from the start of previous month, which can be toggled by using the buttons available with each graph.
+
+    \begin{figure}[h] 
+    \begin{tikzpicture}
+        \node[above right](image) at (0,0){
+            \includegraphics[width=1\textwidth]{graph1.png}};
+        
+            \begin{scope}[
+                x={($0.1*(image.south east)$)},
+                y={($0.1*(image.north west)$)}]
+                 
+                    \draw[stealth-, thin,black] (1.05,6) -- ++(0,-1)
+    node[below,black]{\tiny Total cases};
+
+                    \draw[stealth-, thin,black] (3,8.5) edge (3.5,7) (3.8,8.5) -- (3.5,7)
+    node[left,black]{\tiny Buttons};
+
+            \end{scope}         
+    \end{tikzpicture}
+    \caption{Graph for Total Confirmed Cases}
+    \end{figure}
+
+    \vspace{0.5cm}
+    \noindent Figure 5, shows the spread trends of the virus in the country.
+    \begin{itemize}
+        \item Confirmed per Million
+        \item Recovery Rate
+        \item Active Percentage
+        \item Mortality Rate
+    \end{itemize}
+
+    \begin{figure}[h]
+    \begin{tikzpicture}
+        \node[above right](image) at (0,0){
+            \includegraphics[width=1\textwidth]{trends.png}};
+        
+            \begin{scope}[
+                x={($0.1*(image.south east)$)},
+                y={($0.1*(image.north west)$)}]
+                 
+                    \draw[stealth-, thin,black] (2,9.5) edge (3.5,11) (4,9.5) -- (3.5,11)
+                    node[above,black]{\tiny Cards};
+
+            \end{scope}         
+    \end{tikzpicture}
+    \caption{Spread Trends}
+    \end{figure}
+
+    \vspace{1cm}
+    \noindent The scatter plot below the trends corner and state-wise data table shows the relation between Deaths and Confirmed cases per state.
+    \begin{figure}[h]
+        \hspace*{-1cm}
+        \centering
+        \includegraphics[scale=0.4]{scatter.png}
+        \caption{Relation between deaths and confirmed cases.}
+    \end{figure}
+
+    \pagebreak
+    \section*{Results}
+    Great flexibility comes with convoluted layers and a complex syntax. It can often be daunting with tedious coding to make a publishable plot using matplotlib. In other words, matplotlib should not be our only data visualisation tool, we need always be equipped with alternatives in our toolbox to handle evolving requirements.
+    When it comes with requirements for efficiency, interaction, and web-based visualisation, 'plotly' and 'dash' are must-learn tools. The beauty about these tools is that we do not need to master JavaScript, CSS, and HTML for making interactive web visualisation as both tools handle that for us. They connect us with JavaScript (e.g. React.js, Plotly.js, and d3.js) to make graphs responsive and also beautiful. What we need to provide is just simple codes in pure python environment.
+    \linebreak
+
+    \noindent Since it is a web-based application, it is inevitable to deal with HTML structures for the layout. Instead of writing HTML ourselves, dash provides us with the dash-html-components library to deal with it. We basically just need to compose the layout using Python structures.
+
+    \pagebreak
+    \section*{Conclusion}
+    We knew that Plotly Dash and some of its libraries (Dash Core, HTML, and Bootstrap Components) could offer the tools we need and save us a ton of development time. And last but not least, Python3 and dash led to flexibility and a scalable backend for our hosted and cached data. 
+
+    \pagebreak
+    \section*{References}
+    All of the API used to for retrieving datasets can pe found at :\\
+     \url{https://api.covid19india.org/csv/}
+    \begin{itemize}
+        \item  \url{https://api.covid19india.org/csv/latest/state_wise.csv}
+        \item  \url{https://api.covid19india.org/csv/latest/state_wise_daily.csv}
+        \item  \url{https://api.covid19india.org/csv/latest/state_wise_daily.csv}
+        \item  \url{https://api.covid19india.org/csv/latest/case_time_series.csv}
+    \end{itemize}
+\end{document}
