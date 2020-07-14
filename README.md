@@ -46,9 +46,11 @@ python app.py
 ```
  - open [http://127.0.0.1:8050/](http://127.0.0.1:8050/) on your broser.
 
- ![example 1](./img/ex1.png)
+ ![example 1](./img/pic1.png)
 
- ![example 2](./img/ex2.png)
+ ![example 2](./img/pic2.png)
+
+ ![example 3](./img/pic3.png)
 
 
  ## APIs
